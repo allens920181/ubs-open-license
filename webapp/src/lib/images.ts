@@ -28,3 +28,6 @@ export const COLLECTIONS: Record<string, string> = {
   "OPEN-AI": "AI 生成圖",
   FAUNA: "動物圖",
 };
+
+/** "耶路撒冷" when we have a Chinese name, otherwise the English one without its disambiguating number. */
+export const placeName = (p: { zh: string; n: string }) => p.zh || p.n.replace(/\s+\d+$/, "");

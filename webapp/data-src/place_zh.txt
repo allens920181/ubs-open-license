@@ -1,0 +1,1124 @@
+# 地名中文名稱:「OpenBible 英文名|中文」,用和合本的譯名。編號變體(如 Ai 1、Ai 2)沒列時會找去掉編號的名稱。
+# 這是我依和合本用字整理的,沒有把握的沒列(只顯示英文),請校對。
+Jerusalem|耶路撒冷
+Egypt|埃及
+Babylon|巴比倫
+Jordan|約旦河
+Moab|摩押
+Zion|錫安
+Assyria|亞述
+Samaria|撒瑪利亞
+Edom|以東
+Gilead|基列
+Canaan|迦南
+Bethel|伯特利
+Galilee|加利利
+Syria|敘利亞
+Jericho|耶利哥
+Hebron|希伯崙
+Lebanon|黎巴嫩
+Damascus|大馬士革
+Bashan|巴珊
+Tyre|推羅
+Sodom|所多瑪
+Judea|猶太
+Gibeah|基比亞
+Midian|米甸
+Bethlehem|伯利恆
+Shechem|示劍
+Heshbon|希實本
+Negeb|尼革夫
+Gibeon|基遍
+Gilgal|吉甲
+Euphrates|幼發拉底河
+Nile|尼羅河
+Beersheba|別是巴
+Gath|迦特
+Mizpah|米斯巴
+Ai|艾城
+Shiloh|示羅
+Sidon|西頓
+Nazareth|拿撒勒
+Red Sea|紅海
+Persia|波斯
+Seir|西珥
+Gomorrah|蛾摩拉
+Hamath|哈馬
+Carmel|迦密
+Jezreel|耶斯列
+Lachish|拉吉
+Gaza|迦薩
+Macedonia|馬其頓
+Mount Sinai|西奈山
+Mount Zion|錫安山
+Arabah|亞拉巴
+Dan|但
+Ekron|以革倫
+Ramoth-gilead|基列的拉末
+Susa|書珊
+Tarshish|他施
+Cush|古實
+Nineveh|尼尼微
+Amalek|亞瑪力
+Anathoth|亞拿突
+Ashdod|亞實突
+Asia|亞細亞
+Holy Place|聖所
+Ramah|拉瑪
+Beth-shemesh|伯示麥
+Ephesus|以弗所
+Sheba|示巴
+Sinai|西奈
+Beyond the River|大河西邊
+Capernaum|迦百農
+Eden|伊甸
+Geba|迦巴
+Horeb|何烈山
+Caesarea|凱撒利亞
+Kadesh|加低斯
+Keilah|基伊拉
+Kiriath-jearim|基列耶琳
+Libnah|立拿
+Antioch 1|安提阿
+Antioch 2|彼西底的安提阿
+Elam|以攔
+Gezer|基色
+Joppa|約帕
+Rabbah|拉巴
+Mahanaim|瑪哈念
+Tirzah|得撒
+Ammon|亞捫
+Arnon|亞嫩河
+Ashkelon|亞實基倫
+Cyprus|塞浦路斯
+Great Sea|大海
+Haran|哈蘭
+Jabesh-gilead|基列的雅比
+Jazer|雅謝
+Lebo-hamath|哈馬口
+Megiddo|米吉多
+River|大河
+Ziklag|洗革拉
+Bethany 1|伯大尼
+Bethany 2|約旦河外的伯大尼
+Goshen|歌珊
+Hazor|夏瑣
+Most Holy Place|至聖所
+Mount Seir|西珥山
+Riblah|利比拉
+Valley of the Arnon|亞嫩谷
+Zobah|瑣巴
+Achaia|亞該亞
+Kadesh-barnea|加低斯巴尼亞
+Mount Hor|何珥山
+Ophir|俄斐
+Paddan-aram|巴旦亞蘭
+Shephelah|示非拉
+Succoth|疏割
+Valley of the Son of Hinnom|欣嫩子谷
+Zorah|瑣拉
+Aijalon|亞雅崙
+Aroer|亞羅珥
+Brook of Egypt|埃及小河
+Debir|底壁
+Dibon|底本
+Gerar|基拉耳
+Geshur|基述
+Hormah|何珥瑪
+Kedar|基達
+Kedesh|基低斯
+Kidron|汲淪溪
+Kiriath-arba|基列亞巴
+Michmash|密抹
+Philistia|非利士
+Rome|羅馬
+Salt Sea|鹽海
+Tekoa|提哥亞
+Timnah|亭拿
+Zoar|瑣珥
+Adullam|亞杜蘭
+Babylonia|巴比倫
+Chaldea|迦勒底
+Chebar|迦巴魯河
+Cilicia|基利家
+Edrei|以得來
+Eglon|伊磯倫
+Jabesh|雅比
+Makkedah|瑪基大
+Media|瑪代
+Memphis|挪弗
+Paran|巴蘭
+Peor|毗珥
+Pisgah|毗斯迦
+Shinar|示拿
+Topheth|陀斐特
+Valley of Rephaim|利乏音谷
+Arabia|阿拉伯
+Azekah|亞西加
+Beeroth|比錄
+Beth-aven|伯亞文
+Beth-horon|伯和崙
+Bethsaida|伯賽大
+Bozrah|波斯拉
+Eshtaol|以實陶
+Ezion-geber|以旬迦別
+Hermon|黑門山
+Jabbok|雅博河
+Jahaz|雅雜
+Mesopotamia|美索不達米亞
+Mount Hermon|黑門山
+Nebo|尼波
+Taanach|他納
+Zin|汛
+Zoan|瑣安
+Ar|亞珥
+Arpad|亞珥拔
+Ashtaroth|亞斯他錄
+Bahurim|巴戶琳
+Corinth|哥林多
+Cyrene|古利奈
+Dedan|底但
+East|東方
+Engedi|隱基底
+Galatia|加拉太
+Iconium|以哥念
+Jarmuth|耶末
+Laodicea|老底嘉
+Luz|路斯
+Lystra|路司得
+Machpelah|麥比拉
+Mamre|幔利
+Mareshah|瑪利沙
+Migdol|密奪
+Millo|米羅
+Netophah|尼陀法
+Nob|挪伯
+Rahab|拉哈伯
+Sepharvaim|西法瓦音
+Sharon|沙崙
+Shur|書珥
+Tahpanhes|答巴匿
+Teman|提幔
+Thessalonica|帖撒羅尼迦
+Troas|特羅亞
+Ziph|西弗
+Abarim|亞巴琳山
+Admah|押瑪
+Aram|亞蘭
+Athens|雅典
+Beth-shean|伯珊
+Corner Gate|轉角門
+Crete|克里特
+Elealeh|以利亞利
+Gibbethon|基比頓
+Gihon|基訓泉
+Gozan|歌散
+Greece|希臘
+Hazeroth|哈洗羅
+House of the Forest of Lebanon|黎巴嫩林宮
+Jebus|耶布斯
+Kibroth-hattaavah|基博羅哈他瓦
+Kir|吉珥
+Kir-hareseth|吉珥哈列設
+Kiriathaim|基列亭
+Kishon|基順河
+Massah|瑪撒
+Medeba|米底巴
+Meribah|米利巴
+Meshech|米設
+Mount Carmel|迦密山
+Mount Ebal|以巴路山
+Mount Gilboa|基利波山
+Naioth|拿約
+Ono|阿挪
+Ophel|俄斐勒
+Ophrah|俄弗拉
+Pamphylia|旁非利亞
+Pathros|巴忒羅
+Penuel|毗努伊勒
+Put|普勒
+Rephidim|利非訂
+Sea of Galilee|加利利海
+Sea of the Arabah|亞拉巴海
+Sibmah|西比瑪
+Tabor|他泊山
+Tarsus|大數
+Thebes|挪亞們
+Tubal|土巴
+Valley of Achor|亞割谷
+Valley of Salt|鹽谷
+Water Gate|水門
+Zeboiim|洗扁
+Ain|亞因
+Arad|亞拉得
+Ararat|亞拉臘
+Argob|亞珥歌伯
+Arimathea|亞利馬太
+Ashan|亞珊
+Asshur|亞述
+Beth-arabah|伯亞拉巴
+Beth-jeshimoth|伯耶西末
+Beth-peor|伯毗珥
+Bezer|比悉
+Cana|迦拿
+Chephirah|基非拉
+Derbe|特庇
+Dor|多珥
+Dung Gate|糞廠門
+Elim|以琳
+En-rogel|隱羅結
+Esau|以掃
+Etham|以倘
+Fish Gate|魚門
+Gaash|迦實
+Golan|戈蘭
+Havvoth-jair|哈倭特睚珥
+Hazar-enan|哈撒以難
+Hazar-shual|哈薩書亞
+Horesh|何萊
+Horonaim|荷羅念
+Ibleam|以伯蓮
+Italy|意大利
+Jattir|雅提珥
+Jeshimon|耶師末
+Kedemoth|基底莫
+Kiriath-sepher|基列西弗
+Laish|拉億
+Lehi|利希
+Lod|羅德
+Lo-debar|羅底巴
+Lower Beth-horon|下伯和崙
+Lud|路德
+Maacah|瑪迦
+Maon|瑪云
+Mephaath|米法押
+Moladah|摩拉大
+Mount Esau|以掃山
+Mount Gerizim|基利心山
+Oboth|阿伯
+On|安
+Philippi|腓立比
+Pirathon|比拉頓
+Rameses|蘭塞
+Rehob|利合
+Rimmon|臨門
+Salecah|撒迦
+Salem|撒冷
+Sela|西拉
+Senir|示尼珥
+Sheep Gate|羊門
+Shittim|什亭
+Sin|汛
+Thyatira|推雅推喇
+Tob|陀伯
+Tower of Hananel|哈楠業樓
+Ur|吾珥
+Valley Gate|谷門
+Valley of Eshcol|以實各谷
+Zarephath|撒勒法
+Abel|亞比勒
+Abel-meholah|亞伯米何拉
+Achshaph|押煞
+Ahava|亞哈瓦
+Akrabbim|亞克拉濱
+Alexandria|亞歷山大
+Aphek|亞弗
+Ariel|亞利伊勒
+Azazel|阿撒瀉勒
+Azmon|押孟
+Baalah|巴拉
+Baal-gad|巴力迦得
+Baal-meon|巴力夢
+Baal-zephon|巴力洗分
+Benjamin Gate|便雅憫門
+Besor|比梭溪
+Beth-hoglah|伯曷拉
+Bethphage|伯法其
+Beth-shan|伯珊
+Beth-zur|伯夙
+Caphtor|迦斐託
+Carchemish|迦基米施
+Daberath|大比拉
+Ebenezer|以便以謝
+Elath|以祿
+Eloth|以祿
+En-dor|隱多珥
+Ephrath|以法他
+Eshtemoa|以實提莫
+Ethiopia|古實
+Ezem|以森
+Fountain Gate|泉門
+Gath-rimmon|迦特臨門
+Gebal|迦巴勒
+Gederah|基底拉
+Gennesaret|革尼撒勒
+Gilboa|基利波
+Golgotha|各各他
+Habor|哈博珥
+Hachilah|哈基拉
+Halah|哈臘
+Ham|含
+Harod|哈律泉
+Harosheth-hagoyim|外邦人的夏羅設
+Hena|希拿
+Ijon|以雲
+Ivvah|以瓦
+Jokneam|約念
+Jotbathah|約巴他
+Kabzeel|甲薛
+Lydda|呂大
+Magog|瑪各
+Marah|瑪拉
+Meribah-kadesh|加低斯米利巴
+Miletus|米利都
+Mount Tabor|他泊山
+Nehelam|尼希蘭
+Olivet|橄欖山
+Perga|別加
+Phoenicia|腓尼基
+Phrygia|弗呂家
+Pi-hahiroth|比哈希錄
+Pontus|本都
+Ramoth|拉末
+Sardis|撒狄
+Shunem|書念
+Siloam|西羅亞
+Sirion|西連
+Socoh|梭哥
+South|南地
+Syene|西弗尼
+Tamar|他瑪
+Tappuah|他普亞
+Tema|提瑪
+Uz|烏斯
+Valley of Elah|以拉谷
+Valley of Hinnom|欣嫩谷
+Valley of Jezreel|耶斯列谷
+Valley of Siddim|西訂谷
+Washer's Field|漂布地
+Zanoah|撒挪亞
+Zarethan|撒拉但
+Abdon|押頓
+Abel-beth-maacah|亞伯伯瑪迦
+Abronah|阿伯拉拿
+Achzib|亞革悉
+Adummim|亞土冥坡
+Almon-diblathaim|亞門低比拉太音
+Anab|亞拿伯
+Areopagus|亞略巴古
+Arvad|亞瓦得
+Ashnah|亞實拿
+Assos|亞朔
+Atad|亞達
+Ataroth|亞他綠
+Ataroth-addar|亞他綠亞達
+Azmaveth|押瑪弗
+Babel|巴別
+Beautiful Gate|美門
+Beer-lahai-roi|庇耳拉海萊
+Bela|比拉
+Bene-jaakan|比尼亞干
+Berea|庇哩亞
+Beth-haccherem|伯哈基琳
+Beth-maacah|伯瑪迦
+Beth-marcaboth|伯瑪嘉巴
+Beth-nimrah|伯寧拉
+Beth-pelet|伯帕列
+Beth-rehob|伯利合
+Beth-togarmah|伯陀迦瑪
+Bezek|比色
+Bithynia|庇推尼
+Bochim|波金
+Bozkath|波斯加
+Broad Wall|寬牆
+Caesarea Philippi|凱撒利亞腓立比
+Calah|迦拉
+Calneh|甲尼
+Cappadocia|加帕多家
+Cenchreae|堅革哩
+Cherith|基立溪
+Chinneroth|基尼烈
+Chorazin|哥拉汛
+Dibon-gad|底本
+Dinhabah|亭哈巴
+Dophkah|脫加
+Dothan|多坍
+Ellasar|以拉撒
+Eltolad|以突拉
+Enaim|以南
+En-gannim|隱干寧
+En-shemesh|隱示麥
+Ephraim Gate|以法蓮門
+Ephrathah|以法他
+Erech|以力
+Etam|以坦
+Field of Blood|血田
+Galeed|迦累德
+Gallim|加琳
+Gate of Ephraim|以法蓮門
+Gath-hepher|迦特希弗
+Gederoth|基底錄
+Gedor|基多
+Gethsemane|客西馬尼
+Giloh|基羅
+Gittaim|基他音
+Gob|歌伯
+Hammath|哈末
+Hammon|含們
+Haradah|哈拉大
+Hauran|郝蘭
+Havilah|哈腓拉
+Hazazon-tamar|哈洗遜他瑪
+Helam|希蘭
+Helkath|黑甲
+Hepher|協弗
+Hethlon|黑特倫
+Holon|荷崙
+Hor-haggidgad|曷哈及甲
+Horse Gate|馬門
+Immer|音麥
+India|印度
+Iye-abarim|以耶亞巴琳
+Jahzah|雅雜
+Janoah|雅挪亞
+Javan|雅完
+Jogbehah|約比哈
+Jordan Valley|約旦谷
+Juttah|淤他
+Kain|該隱
+Kanah|加拿
+Kehelathah|基希拉他
+Kenath|基納
+Kerioth|加略
+Kidron Valley|汲淪谷
+King's Highway|王道
+King's Valley|王谷
+Kiriath-baal|基列巴力
+Kishion|基歇
+Kittim|基提
+Kue|古以
+Libya|利比亞
+Luhith|魯希
+Madmannah|抹瑪拿
+Madon|瑪頓
+Mahaneh-dan|瑪哈尼但
+Makheloth|瑪吉希羅
+Masrekah|瑪士利加
+Mattanah|瑪他拿
+Merom|米倫
+Michmas|密抹
+Michmethath|密米他
+Migron|密奪
+Minnith|米匿
+Mishal|米沙勒
+Misrephoth-maim|米斯利弗瑪音
+Mithkah|密加
+Moreh|摩利
+Moresheth|摩利設
+Moseroth|摩西錄
+Mount Halak|哈拉山
+Mount Nebo|尼波山
+Mount Paran|巴蘭山
+Mount Shepher|沙斐山
+Mysia|每西亞
+Nahalal|拿哈拉
+Naphath-dor|拿法多珥
+Nephtoah|尼弗多亞
+New Gate|新門
+Nimrim|寧林
+Nobah|挪巴
+Paphos|帕弗
+Pekod|比割
+Pelusium|培琉喜
+Pergamum|別迦摩
+Pethor|毗奪
+Philadelphia|非拉鐵非
+Pisidia|彼西底
+Place of a Skull|髑髏地
+Punon|普嫩
+Rehoboth|利河伯
+Rezeph|利色
+Rimmon-perez|臨門帕烈
+Rissah|立撒
+Rithmah|利提瑪
+Rogelim|羅基琳
+Sarid|撒立
+Sea of Chinnereth|基尼烈海
+Sea of Tiberias|提比哩亞海
+Seba|西巴
+Shaalbim|沙賓
+Shaaraim|沙拉音
+Shamir|沙密
+Shepham|示番
+Shihor|西曷河
+Shimron|伸崙
+Smyrna|士每拿
+Soco|梭哥
+Spain|西班牙
+Taberah|他備拉
+Tahath|他哈
+Telassar|提拉撒
+Tel-harsha|提勒哈薩
+Tel-melah|提勒米拉
+Terah|他拉
+Thebez|提備斯
+Tigris|底格里斯河
+Timnath-serah|亭拿西拉
+Tower of the Hundred|哈米亞樓
+Tower of the Ovens|爐樓
+Ulai|烏萊河
+Uphaz|烏法
+Uzza|烏撒
+Valley of Hamon-gog|哈們歌革谷
+Valley of Iphtahel|益弗他伊勒谷
+Valley of Jehoshaphat|約沙法谷
+Valley of Lebanon|黎巴嫩谷
+Zaanannim|撒拿音
+Zalmonah|薩摩拿
+Zaphon|洗分
+Zedad|西達
+Zela|洗拉
+Zered|謝烈溪
+Abana|亞罷拿河
+Abel-keramim|亞備勒基拉明
+Abel-maim|亞伯瑪音
+Abel-mizraim|亞伯麥西
+Abel-shittim|亞伯什亭
+Abiezer|亞比以謝
+Abilene|亞比利尼
+Accad|亞甲
+Acco|亞柯
+Adadah|亞大達
+Adam|亞當城
+Adamah|亞大瑪
+Adami-nekeb|亞大米尼吉
+Addar|亞達
+Addon|亞頓
+Adithaim|亞底太音
+Adoraim|亞多萊音
+Adramyttium|亞大米田
+Adriatic Sea|亞得里亞海
+Aenon|哀嫩
+Ahlab|亞黑拉
+Aiath|亞葉
+Aija|亞雅
+Akeldama|亞革大馬
+Alemeth|亞勒篾
+Allammelech|亞拉米勒
+Allon-bacuth|亞倫巴古
+Almon|亞勒們
+Amad|亞末
+Amam|亞曼
+Amana|亞瑪拿
+Amphipolis|暗妃波里
+Anaharath|亞拿哈拉
+Ananiah|亞拿尼雅
+Anem|亞念
+Aner|亞乃
+Anim|亞年
+Antipatris|安提帕底
+Aphekah|亞悉
+Aphik|亞弗
+Apollonia|亞波羅尼亞
+Arab|亞拉
+Aram-naharaim|亞蘭拿哈拉姆
+Aram-zobah|瑣巴
+Armageddon|哈米吉多頓
+Arubboth|亞魯泊
+Arumah|亞盧瑪
+Ashkenaz|亞實基拿
+Ashteroth-karnaim|亞斯他律加寧
+Athach|亞他
+Atharim|亞他林
+Atroth-shophan|亞拓綠朔反
+Attalia|亞大利
+Aven|亞文
+Avva|亞瓦
+Avvim|亞維
+Ayyah|亞雅
+Azal|亞薩
+Aznoth-tabor|亞斯那他泊
+Azotus|亞鎖都
+Baal|巴力
+Baalath|巴拉
+Baalath-beer|巴拉比珥
+Baale-judah|巴拉猶大
+Baal-hamon|巴力哈們
+Baal-hazor|巴力夏瑣
+Baal-hermon|巴力黑門
+Baal-shalishah|巴力沙利沙
+Baal-tamar|巴力他瑪
+Baharum|巴路米
+Balah|巴拉
+Bamah|巴瑪
+Bath-rabbim|巴特拉併
+Beer|比珥
+Beer-elim|比珥以琳
+Beeshterah|比施提拉
+Bene-berak|比尼比拉
+Bered|巴列
+Berothah|比羅他
+Berothai|比羅太
+Betah|比他
+Beten|比田
+Beth-anoth|伯亞諾
+Beth-arbel|伯亞比勒
+Beth-azmaveth|伯亞斯瑪弗
+Beth-barah|伯巴拉
+Beth-biri|伯比利
+Beth-car|伯甲
+Beth-dagon|伯大袞
+Beth-diblathaim|伯低比拉太音
+Beth-eden|伯伊甸
+Beth-emek|伯以墨
+Bethesda|畢士大
+Beth-ezel|伯以薛
+Beth-gamul|伯迦末
+Beth-gilgal|伯吉甲
+Beth-haggan|伯園
+Beth-haram|伯哈蘭
+Beth-haran|伯哈蘭
+Beth-le-aphrah|伯亞弗拉
+Beth-lebaoth|伯利巴勒
+Bethlehem 2|西布倫的伯利恆
+Bethlehem Ephrathah|以法他的伯利恆
+Beth-meon|伯米恩
+Beth-pazzez|伯帕斯依
+Beth-shittah|伯西他
+Beth-tappuah|伯他普亞
+Bethuel|彼土利
+Bethul|比土利
+Betonim|比多念
+Bilhah|辟拉
+Biziothiah|比斯約他
+Bor-ashan|波拉珊
+Bozez|播薛
+Brook of the Arabah|亞拉巴河
+Brook of the Willows|柳樹河
+Buz|布斯
+Cabbon|加本
+Cabul|迦步
+Calno|甲挪
+Canneh|干尼
+Casiphia|迦西斐亞
+Cauda|高大
+Chephar-ammoni|基法亞穆尼
+Chesalon|基撒倫
+Chesil|基失
+Chesulloth|基蘇祿
+Chezib|基悉
+Chilmad|吉抹
+Chinnereth|基尼烈
+Chios|基阿
+Chisloth-tabor|基斯綠他泊
+Chitlish|基提利
+City of Salt|鹽城
+Cnidus|革尼土
+Colossae|歌羅西
+Cos|哥士
+Cozeba|哥西巴
+Cun|均
+Cushan|古珊
+Cuth|古他
+Cuthah|古他
+Dabbesheth|大比設
+Dalmanutha|大瑪努他
+Dalmatia|達爾馬太
+Dannah|單拿
+Dilean|底連
+Dimonah|底摩拿
+Diviners' Oak|術士橡樹
+Dizahab|底撒哈
+Dragon Spring|龍泉
+Dumah|度瑪
+Dura|杜拉
+East Gate|東門
+Ebez|以別斯
+Ebron|伊伯崙
+Ecbatana|亞馬他
+Eder|以得
+Eglaim|以割萊音
+El-bethel|伊勒伯特利
+Elishah|以利沙
+Elkosh|伊勒哥士
+Elon|以倫
+Elonbeth-hanan|以倫伯哈南
+El-paran|伊勒巴蘭
+Elteke|伊利提基
+Eltekeh|伊利提基
+Eltekon|伊利提公
+Emek-keziz|克悉谷
+Emmaus|以馬忤斯
+Enam|以南
+Eneglaim|隱以革萊音
+En-haddah|隱哈大
+En-hakkore|隱哈歌利
+En-hazor|隱夏瑣
+En-mishpat|隱米示巴
+En-rimmon|隱臨門
+En-tappuah|隱他普亞
+Ephah|以法
+Ephes-dammim|以弗大憫
+Ephraim|以法蓮
+Ephron|以弗崙
+Esek|以瑟
+Eshan|以珊
+Eshtemoh|以實提莫
+Eth-kazin|伊特加慎
+Fair Havens|美澳
+Forum of Appius|亞比烏市
+Gabbatha|厄巴大
+Gamad|迦瑪
+Gareb|迦立
+Gate of Benjamin|便雅憫門
+Gate of the Foundation|根基門
+Gate of the Guard|護衛門
+Gebim|基賓
+Geder|基達
+Gederothaim|基底羅他音
+Geliloth|基利羅
+Geruth Chimham|基罕旅店
+Giah|基亞
+Gibeath-elohim|神的山
+Gibeath-haaraloth|割包皮山
+Gidom|基多
+Gilo|吉羅
+Gimzo|金鎖
+Goah|歌亞
+Gog|歌革
+Gomer|歌篾
+Great Sidon|西頓
+Gur|古珥
+Gurbaal|姑珥巴力
+Hadad-rimmon|哈達臨門
+Hadashah|哈大沙
+Hadid|哈第
+Hadrach|哈得拉
+Haeleph|哈利弗
+Hahiroth|希錄
+Halhul|哈忽
+Hali|哈利
+Hall of Judgment|審判廊
+Hall of Pillars|柱廊
+Hall of the Throne|御座廊
+Hamath-zobah|哈馬瑣巴
+Hammoth-dor|哈末多珥
+Hamonah|哈摩拿
+Hanes|哈內斯
+Hannathon|哈拿頓
+Hapharaim|哈弗連
+Hara|哈拉
+Harmon|哈門
+Hazar-addar|哈薩亞達
+Hazar-gaddah|哈洗迦大
+Hazar-susah|夏撒蘇撒
+Hazar-susim|夏撒書心
+Hazer-hatticon|哈薩哈提干
+Hazor-hadattah|夏瑣哈大他
+Helbah|黑巴
+Helbon|黑本
+Heleph|希勒弗
+Heliopolis|安
+Helkath-hazzurim|黑基拉斯
+Heres|希烈
+Hereth|哈列
+Heshmon|黑實門
+Hezron|希斯崙
+Hierapolis|希拉波利
+Hilen|希崙
+Hobah|何把
+Horem|賀聯
+Hosah|河撒
+House of the Forest|林宮
+Hukkok|戶割
+Hukok|戶割
+Idalah|以大拉
+Idumea|以土買
+Iim|以因
+Illyricum|以利哩古
+Iphtah|益弗他
+Irpeel|伊利毘勒
+Ir-shemesh|伊珥示麥
+Ithlah|益拉
+Ithnan|以提南
+Ituraea|以土利亞
+Iyim|以因
+Jaar|雅珥
+Jabez|雅比斯
+Jabneel|雅比聶
+Jabneh|雅比尼
+Jagur|雅姑珥
+Jair|睚珥
+Janim|亞念
+Japhia|雅非亞
+Jegar-sahadutha|伊迦爾撒哈杜他
+Jehud|耶忽
+Jekabzeel|耶加比洗
+Jeruel|耶魯伊勒
+Jeshanah|耶沙拿
+Jeshua|耶書亞
+Jetur|伊突
+Jokdeam|約甲
+Jokmeam|約緬
+Joktheel|約帖
+Jotbah|約巴
+Kamon|加們
+Karka|加加
+Karkor|加爾各
+Karnaim|加寧
+Kartah|加他
+Kartan|加坦
+Kattath|加他
+Kedesh-naphtali|拿弗他利的基低斯
+Kerioth-hezron|加略希斯崙
+Kibzaim|基伯先
+Kinah|基拿
+King's Pool|王池
+Kiriath-arim|基列耶琳
+Kiriath-huzoth|基列胡瑣
+Kiriath-sannah|基列桑拿
+Kitron|基倫
+Koa|可亞
+Laban|拉班
+Lahmam|拉幔
+Laishah|來沙
+Lakkum|拉共
+Lasea|拉西亞
+Lasha|拉沙
+Lasharon|沙崙
+Lebaoth|利巴勒
+Leb-kamai|利加米
+Lebonah|利波拿
+Leshem|利善
+Lower and Upper Beth-horon|上下伯和崙
+Lycaonia|路高尼亞
+Lycia|呂家
+Maacath|瑪迦
+Maarath|瑪臘
+Maareh-geba|迦巴草場
+Madmenah|瑪得米拿
+Magadan|馬加丹
+Mahalab|瑪哈拉
+Makaz|馬迦斯
+Malta|馬耳他
+Manahath|瑪拿轄
+Mareal|瑪拉拉
+Maroth|瑪律
+Mashal|瑪沙
+Mearah|米亞拉
+Meconah|米哥拿
+Me-jarkon|耶甲河
+Merathaim|米拉特音
+Meroz|米羅斯
+Mesha|米沙
+Metheg-ammah|米特阿瑪
+Middin|米亭
+Migdal-el|密大伊勒
+Migdal-gad|密奪迦得
+Minni|米尼
+Mitylene|米推利尼
+Mizpeh|米斯巴
+Moresheth-gath|摩利設迦特
+Moriah|摩利亞
+Moserah|摩西拉
+Most Holy|至聖所
+Mount Baal-hermon|巴力黑門山
+Mount Baalah|巴拉山
+Mount Ephraim|以法蓮山
+Mount Ephron|以弗崙山
+Mount Gilead|基列山
+Mount Heres|希烈山
+Mount Horeb|何烈山
+Mount Jearim|耶琳山
+Mount Lebanon|黎巴嫩山
+Mount Mizar|米薩山
+Mount Moriah|摩利亞山
+Mount Perazim|毗拉心山
+Mount Sirion|西連山
+Mount Zalmon|撒們山
+Mount Zemaraim|洗瑪利穆山
+Mozah|摩撒
+Myra|每拉
+Naamah|拿瑪
+Naarah|拿拉
+Naaran|拿蘭
+Nahaliel|拿哈列
+Nahalol|拿哈羅
+Nain|拿因
+Naphish|拿非施
+Naphoth-dor|拿法多珥
+Neah|尼亞
+Neapolis|尼亞波利
+Nebaioth|尼拜約
+Neballat|尼八拉
+Neiel|尼業
+Netaim|尼他應
+Nezib|尼悉
+Nibshan|尼卜珊
+Nicopolis|尼哥波立
+Nimrah|寧拉
+Nimrod|寧錄
+Nod|挪得
+Nodab|挪答
+Nohah|挪哈
+Nophah|挪法
+Ophni|俄弗尼
+Paddan|巴旦
+Pai|巴伊
+Parah|法拉
+Parvaim|巴瓦音
+Pas-dammim|帕斯達閔
+Patara|帕大喇
+Patmos|拔摩
+Pau|巴烏
+Peniel|毗努伊勒
+Perez-uzza|毗利斯烏撒
+Perez-uzzah|毗利斯烏撒
+Pharpar|法珥法河
+Phoenix|非尼基
+Pi-beseth|彼貝塞
+Pishon|比遜河
+Pithom|比東
+Plain|平原
+Pool of Shelah|西羅亞池
+Potsherd Gate|瓦門
+Ptolemais|多利買
+Pul|普勒
+Puteoli|部丟利
+Raamah|拉瑪
+Raamses|蘭塞
+Rabbith|拉比
+Racal|利甲
+Rakkath|拉甲
+Rakkon|拉恭
+Ramathaim-zophim|拉瑪瑣非
+Ramath-lehi|拉末利希
+Ramath-mizpeh|拉末米斯巴
+Recah|利迦
+Rehoboth-Ir|利河伯以珥
+Rekem|利金
+Remeth|利篾
+Rephaim|利乏音
+Resen|利鮮
+Rhegium|利基翁
+Rhodes|羅底
+Rimmono|臨摩挪
+Rumah|魯瑪
+Salamis|撒拉米
+Salim|撒冷
+Salmone|撒摩尼
+Samos|撒摩
+Samothrace|撒摩特拉
+Sansannah|三撒拿
+Sea of Chinneroth|基尼烈海
+Sea of Egypt|埃及海
+Sea of Jazer|雅謝海
+Sea of the Philistines|非利士海
+Sebam|西巴麥
+Secacah|西迦迦
+Secu|西沽
+Seirah|西伊拉
+Seleucia|西流基
+Seneh|西尼
+Sephar|西法
+Sepharad|西法拉
+Serpent's Stone|蛇磐石
+Shaalabbin|沙拉賓
+Shaalim|沙琳
+Shahazumah|沙哈洗瑪
+Shalishah|沙利沙
+Shallecheth|沙利歇
+Shaphir|沙斐
+Sharuhen|沙魯險
+Shaveh-kiriathaim|沙微基列亭
+Shebarim|示巴琳
+Shema|示瑪
+Shen|善
+Shibah|示巴
+Shihor-libnath|西曷利尼
+Shikkeron|施基崙
+Shilhim|示利希
+Shiloah|西羅亞
+Shimron-meron|伸崙米倫
+Shion|示按
+Shoa|疏亞
+Shual|朔亞
+Sibraim|西伯拉音
+Sidon the Great|西頓
+Silla|西拉
+Siphmoth|西弗摩
+Sirah|西拉井
+Sitnah|西提拿
+Solomon's Portico|所羅門的廊
+Straight|直街
+Suph|蘇弗
+Suphah|蘇法
+Sur|書珥
+Sychar|敘加
+Syracuse|敘拉古
+Syrtis|賽耳底沙洲
+Taanath-shiloh|他納示羅
+Tabbath|他巴
+Tadmor|達莫
+Taralah|他拉拉
+Tehaphnehes|答比匿希斯
+Tel-abib|提勒亞畢
+Telaim|提拉因
+Telem|提利姆
+The Lord Is There|耶和華沙瑪
+The Place of a Skull|髑髏地
+The Skull|髑髏
+The Stone Pavement|鋪華石處
+Three Taverns|三館
+Tiberias|提比哩亞
+Tibhath|提巴
+Timnath-heres|亭拿希烈
+Tiphsah|提弗薩
+Tishbe|提斯比
+Tochen|陀健
+Tolad|陀拉
+Tophel|陀弗
+Trachonitis|特拉可尼
+Ummah|亞瑪
+Uzal|烏薩
+Uzzen-sheerah|烏羨舍伊拉
+Vale of Succoth|疏割谷
+Valley of Aijalon|亞雅崙谷
+Valley of Aven|亞文平原
+Valley of Baca|巴迦谷
+Valley of Beracah|比拉迦谷
+Valley of Gerar|基拉耳谷
+Valley of Gibeon|基遍谷
+Valley of Hebron|希伯崙谷
+Valley of Jericho|耶利哥谷
+Valley of Mizpeh|米斯巴谷
+Valley of Shaveh|沙微谷
+Valley of Shittim|什亭谷
+Valley of Sorek|梭烈谷
+Valley of Succoth|疏割谷
+Valley of Zeboim|洗波音谷
+Valley of Zephathah|洗法谷
+Valley of Zered|謝烈谷
+Valley of the Travelers|行路人谷
+Way of Holiness|聖路
+Wildgoats' Rocks|野山羊磐石
+Yiron|以倫
+Zaanan|贊南
+Zair|洗珥
+Zalmon|撒們
+Zeboim|洗扁
+Zelzah|洗撒
+Zemaraim|洗瑪臉
+Zenan|洗楠
+Zephath|洗法
+Zer|洗珥
+Zeredah|洗利大
+Zererah|洗利拉
+Zereth-shahar|洗列哈沙轄
+Ziddim|洗叠
+Zimri|心利
+Zior|西珥
+Ziphron|西斐崙
+Ziz|洗斯
+Zophim|瑣腓
+Zuph|蘇弗

@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { useImages, useNature, useRoutes } from "../lib/data";
+import { useImages, useNature, usePlaces, useRoutes } from "../lib/data";
 import { imageTitle, imageUrl } from "../lib/images";
 import { parseRef } from "../lib/refs";
 import {
@@ -79,7 +79,7 @@ export default function Sermon() {
   );
 }
 
-const TYPE_LABEL = { image: "圖片", route: "路線", nature: "動植物器物", passage: "經文" } as const;
+const TYPE_LABEL = { image: "圖片", route: "路線", nature: "動植物器物", passage: "經文", place: "地名" } as const;
 
 function Thumb({ item, image }: { item: SermonItem; image?: { col: string; file: string } }) {
   if (item.type === "image" && image) return <img className="thumb" src={imageUrl(image, 200)} alt="" />;
@@ -88,6 +88,7 @@ function Thumb({ item, image }: { item: SermonItem; image?: { col: string; file:
 
 function ItemLink({ item }: { item: SermonItem }) {
   if (item.type === "route") return <Link className="small" to={`/map?r=${encodeURIComponent(item.ref)}`}>在地圖中開啟</Link>;
+  if (item.type === "place") return <Link className="small" to={`/map?p=${encodeURIComponent(item.ref)}`}>在地圖中開啟</Link>;
   if (item.type === "nature") { const [k, key] = item.ref.split(":"); return <Link className="small" to={`/nature/${k}/${encodeURIComponent(key)}`}>開啟條目</Link>; }
   if (item.type === "passage") { const s = parseRef(item.ref); return s ? <Link className="small" to={passagePath(s)}>開啟經文</Link> : null; }
   return null;
@@ -99,6 +100,7 @@ function Present({ items, start, onClose }: { items: SermonItem[]; start: number
   const it = items[i];
   const images = useImages();
   const routes = useRoutes();
+  const places = usePlaces();
   const kind = it?.type === "nature" ? (it.ref.split(":")[0] as NatureKind) : null;
   const nature = useNature(kind);
   useEffect(() => {
@@ -117,6 +119,8 @@ function Present({ items, start, onClose }: { items: SermonItem[]; start: number
   const groups = useMemo(() => [...new Set((routes.data ?? []).map((r) => r.group))], [routes.data]);
   const entry = it && kind ? nature.data?.find((e) => e.k === it.ref.split(":")[1]) : undefined;
   const picked = useMemo(() => (route ? [route] : []), [route]);
+  const place = it?.type === "place" ? places.data?.find((x) => x.id === it.ref) : undefined;
+  const placeList = useMemo(() => (place ? [place] : []), [place]);
   if (!it) return null;
 
   return (
@@ -130,10 +134,11 @@ function Present({ items, start, onClose }: { items: SermonItem[]; start: number
       </div>
       <div className="present-body">
         {image && <img key={image.id} src={imageUrl(image, 1600)} alt={imageTitle(image)} />}
-        {route && <RouteMap routes={picked} groups={groups} focusId={route.id} />}
+        {route && <RouteMap routes={picked} groups={groups} focusId={route.id} places={places.data} nearby={places.data} />}
+        {place && <RouteMap routes={[]} groups={groups} places={placeList} focusPlaceId={place.id} />}
         {entry && kind && <div className="present-scroll"><NatureDetail kind={kind} entry={entry} images={images.data} /></div>}
         {it.type === "passage" && <div className="present-text">{it.title}</div>}
-        {!image && !route && !entry && it.type !== "passage" && <p className="muted">載入中…</p>}
+        {!image && !route && !place && !entry && it.type !== "passage" && <p className="muted">載入中…</p>}
       </div>
       {it.note && <div className="present-note">{it.note}</div>}
       {image && <div className="present-credit">{imageTitle(image)} · {image.cp}</div>}

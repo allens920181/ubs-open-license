@@ -37,7 +37,7 @@ export default function Home() {
       {rec.length > 0 && (<><h3>最近查過</h3><div className="chips">{rec.map((q) => <button key={q} className="chip" onClick={() => go(q)}>{q}</button>)}</div></>)}
       <h3>直接瀏覽</h3>
       <div className="tiles">
-        <Link to="/map" className="tile"><b>路線地圖</b><span>179 條聖經人物行程,3D 衛星地形,可播放</span></Link>
+        <Link to="/map" className="tile"><b>路線地圖</b><span>179 條聖經人物行程與 1,200 多個地名,3D 衛星地形</span></Link>
         <Link to="/images" className="tile"><b>圖片庫</b><span>1,500 多張聖經世界的照片與插圖</span></Link>
         <Link to="/nature" className="tile"><b>動植物與器物</b><span>三本手冊,共 700 多個條目</span></Link>
         <Link to="/sermon" className="tile"><b>講道清單</b><span>收集要用的圖片與路線,上台時全螢幕展示</span></Link>

@@ -41,7 +41,7 @@ export default function App() {
       </main>
       <footer className="footer">
         資料 © United Bible Societies,<a href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>。
-        圖片版權屬各自的作者,詳見每張圖片的說明。路線:Leen Ritmeyer。
+        圖片版權屬各自的作者,詳見每張圖片的說明。路線:Leen Ritmeyer。聖經地名座標:<a href="https://www.openbible.info/geo/">OpenBible.info</a>(<a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>)。
       </footer>
     </HashRouter>
   );

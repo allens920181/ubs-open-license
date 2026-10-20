@@ -56,3 +56,24 @@ export interface HottpEntry {
   sg: string;
   alts: { s: string; rt: string; v: [string, string][]; f: string[]; lit: string }[];
 }
+
+export interface Place {
+  id: string;
+  /** OpenBible's English name (numbered when several places share one, e.g. "Antioch 1"). */
+  n: string;
+  zh: string;
+  refs: number[];
+  lat?: number;
+  lon?: number;
+  /** Position is a best guess. */
+  ap?: 1;
+  /** A region or area around the point rather than a spot. */
+  rg?: 1;
+  k?: "region" | "water" | "river" | "island" | "mobile";
+  c?: string;
+  root?: string;
+  /** Hebrew names from the UBS dictionary: [lemma, Strong's number, gloss?]. */
+  heb?: string[][];
+  /** Added from the Hebrew dictionary only (not in OpenBible). */
+  x?: 1;
+}

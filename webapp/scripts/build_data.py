@@ -246,6 +246,151 @@ def build_hottp():
         write(f"hottp/{n:02d}.json", items)
 
 
+# ---------- places (OpenBible.info geocoding, CC BY 4.0, merged with the MARBLE Hebrew place index) ----------
+def book_aliases():
+    out = {}
+    norm = lambda t: re.sub(r"[\s.]", "", t.lower())
+    for b in BOOKS:
+        for a in [b["code"], b["zh"], b["abbr"], b["en"], *b["alias"]]:
+            out[norm(a)] = b["n"]
+    out["1thes"], out["2thes"] = BOOK_N["1TH"], BOOK_N["2TH"]  # OpenBible writes "1 Thes"
+    return out, norm
+
+
+def place_verses(text, aliases, norm):
+    verses = set()
+    for tok in text.split(","):
+        m = re.match(r"^\s*(.+?)\s+(\d+):(\d+)(?:-(\d+))?\s*$", tok)
+        n = m and aliases.get(norm(m.group(1)))
+        if not n:
+            continue
+        a, z = int(m.group(3)), int(m.group(4) or m.group(3))
+        for v in range(a, min(z, a + 60) + 1):
+            verses.add(n * 1_000_000 + int(m.group(2)) * 1000 + v)
+    return sorted(verses)
+
+
+def coord(text):
+    """-> (value or None, approximate?)"""
+    t = (text or "").strip()
+    approx = "~" in t or "?" in t
+    t = t.lstrip("~<>").rstrip("?")
+    try:
+        return float(t), approx
+    except ValueError:
+        return None, approx
+
+
+def hav_km(a, b):
+    k = math.pi / 180
+    x = (b[1] - a[1]) * k * math.cos((a[0] + b[0]) * k / 2)
+    y = (b[0] - a[0]) * k
+    return math.hypot(x, y) * 6371
+
+
+def hebrew_places():
+    """Place entries of the UBS Hebrew dictionary: lemma, English gloss, Strong's code, coordinates, verses."""
+    with open(os.path.join(REPO, "dictionaries", "hebrew", "JSON", "UBSHebrewDic-v0.9.3-en.JSON"), encoding="utf-8") as fh:
+        entries = json.load(fh)
+    out = []
+    for e in entries:
+        for bf in e.get("BaseForms") or []:
+            for m in bf.get("LEXMeanings") or []:
+                if not any("Names of Locations" in (d.get("Domain") or "") for d in (m.get("LEXDomains") or [])):
+                    continue
+                gl = next((g for s in (m.get("LEXSenses") or []) if s.get("LanguageCode") == "en" for g in (s.get("Glosses") or [])), "")
+                pts = []
+                for c in m.get("LEXCoordinates") or []:
+                    try:
+                        pts.append(tuple(float(x) for x in c.split(",")))
+                    except ValueError:
+                        pass
+                out.append({"lemma": e["Lemma"], "gloss": gl, "strong": (e.get("StrongCodes") or [""])[0], "pts": pts,
+                            "refs": [v for v in map(verse_of, m.get("LEXReferences") or []) if v]})
+    return out
+
+
+def name_key(s):
+    return re.sub(r"[^a-z]", "", re.sub(r"\s+\d+$", "", s).lower())
+
+
+def build_places():
+    aliases, norm = book_aliases()
+    zh = pairs("place_zh.txt")
+    rows = []
+    with open(os.path.join(SRC, "openbible", "merged.txt"), encoding="utf-8") as fh:
+        for line in fh:
+            if line.startswith("#"):
+                continue
+            c = line.rstrip("\n").split("\t")
+            if len(c) >= 5 and c[0].strip():
+                rows.append(c + [""] * (6 - len(c)))
+    by_name = {r[0]: r for r in rows}
+
+    def locate(r, depth=0):
+        lat, a1 = coord(r[2])
+        lon, a2 = coord(r[3])
+        if lat is not None and lon is not None:
+            return lat, lon, a1 or a2, r[2].lstrip().startswith(">")
+        root = by_name.get(r[1])
+        if root and depth < 5 and root is not r:
+            la, lo, ap, sur = locate(root, depth + 1) or (None, None, True, False)
+            if la is not None:
+                return la, lo, True, sur
+        return None
+
+    out = []
+    for r in rows:
+        loc = locate(r)
+        note = r[5].strip()
+        kind = note if note in ("region", "water", "river", "island", "mobile") else ""
+        if note.startswith("http") or note in ("~", "?", kind):
+            note = ""
+        base = re.sub(r"\s+\d+$", "", r[0])
+        p = {"id": r[0], "n": r[0], "zh": zh.get(r[0]) or zh.get(base, ""), "refs": place_verses(r[4], aliases, norm)}
+        if loc:
+            p.update(lat=round(loc[0], 5), lon=round(loc[1], 5))
+            if loc[2]:
+                p["ap"] = 1
+            if loc[3] or kind == "region":
+                p["rg"] = 1
+        if kind:
+            p["k"] = kind
+        if note:
+            p["c"] = note
+        if r[1] and r[1] != r[0]:
+            p["root"] = r[1]
+        out.append(p)
+    # Attach the Hebrew name (lemma, Strong's number) when the dictionary's English gloss is this place's own name
+    # (not the name of the city a region happens to be pinned to) and its coordinates agree; dictionary places that match nothing are added as places of their own.
+    hebrew = hebrew_places()
+    used = set()
+    for i, h in enumerate(hebrew):
+        key = name_key(h["gloss"])
+        for p in out:
+            if "lat" in p and h["pts"] and key and key == name_key(p["n"]) \
+               and min(hav_km(pt, (p["lat"], p["lon"])) for pt in h["pts"]) < 3:
+                p.setdefault("heb", []).append([h["lemma"], h["strong"]])
+                used.add(i)
+    extra = aliased = 0
+    for i, h in enumerate(hebrew):
+        if i in used or not h["pts"] or not h["gloss"]:
+            continue
+        near = [p for p in out if "lat" in p and "x" not in p and hav_km(h["pts"][0], (p["lat"], p["lon"])) < 0.2]
+        if near:  # another name for a place we already have (e.g. Mizraim at Egypt)
+            best = max(near, key=lambda p: len(p["refs"]))
+            best.setdefault("heb", []).append([h["lemma"], h["strong"], h["gloss"]])
+            aliased += 1
+            continue
+        out.append({"id": f"H:{h['strong']}:{h['lemma']}", "n": h["gloss"], "zh": "", "refs": sorted(set(h["refs"])),
+                    "lat": round(h["pts"][0][0], 5), "lon": round(h["pts"][0][1], 5), "heb": [[h["lemma"], h["strong"]]], "x": 1})
+        extra += 1
+    print(f"    Hebrew names attached to {sum(1 for p in out if p.get('heb') and 'x' not in p)} places; {extra} dictionary places added, {aliased} more names attached to nearby places")
+    write("places.json", out)
+    print(f"    {sum(1 for p in out if 'lat' in p)} of {len(out)} places have coordinates, "
+          f"{sum(1 for p in out if p['zh'])} have a Chinese name")
+
+
 if __name__ == "__main__":
     print("building data ->", OUT)
     build_routes()
@@ -253,3 +398,4 @@ if __name__ == "__main__":
     build_nature()
     build_parallels()
     build_hottp()
+    build_places()

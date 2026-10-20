@@ -171,3 +171,14 @@ textarea.input { width: 100%; resize: vertical; }
   .route-browser { grid-template-rows: 55% 1fr; }
   h1 { font-size: 1.4rem; }
 }
+
+/* places on the map */
+.map-label { color: #fff; font: 600 13px/1.2 system-ui, "Noto Sans TC", sans-serif; text-shadow: 0 0 3px #000, 0 0 3px #000, 0 0 6px #000; white-space: nowrap; pointer-events: none; }
+.passing { padding: 1px 10px; border-radius: 999px; background: var(--accent); color: #fff; }
+.place-card { color: #26211c; min-width: 160px; }
+.place-card .muted { color: #6c6258; }
+.place-card .heb { font-size: 1.15rem; color: #26211c; }
+.place-card a { color: #8a3d1c; }
+.maplibregl-popup-content { padding: 10px 14px; border-radius: 10px; }
+.tabs.mini { margin: 0; padding: 0 8px; }
+.tabs.mini .tab { padding: 6px 10px; }

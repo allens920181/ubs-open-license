@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { anySpan, anyVerse, bookByNumber, formatSpan, overlaps, parseRef, spanToParam } from "../lib/refs";
-import { useHottp, useImages, useNature, useParallels, useRoutes } from "../lib/data";
+import { useHottp, useImages, useNature, useParallels, usePlaces, useRoutes } from "../lib/data";
 import type { NatureEntry, NatureKind } from "../lib/types";
 import ImageGrid from "../components/ImageGrid";
 import NatureDetail, { KIND_LABEL } from "../components/NatureDetail";
@@ -13,7 +13,7 @@ import { remember } from "./Home";
 
 const TABS = ["map", "images", "nature", "parallel", "hottp"] as const;
 type Tab = (typeof TABS)[number];
-const TAB_LABEL: Record<Tab, string> = { map: "地圖路線", images: "圖片", nature: "動植物與器物", parallel: "平行經文", hottp: "經文校勘" };
+const TAB_LABEL: Record<Tab, string> = { map: "地圖與地名", images: "圖片", nature: "動植物與器物", parallel: "平行經文", hottp: "經文校勘" };
 const RATING: Record<string, string> = { A: "A 幾乎確定", B: "B 有些疑問", C: "C 相當疑問", D: "D 非常疑問" };
 const KINDS: NatureKind[] = ["flora", "fauna", "realia"];
 
@@ -26,6 +26,7 @@ export default function Passage() {
   const book = span ? Math.floor(span[0] / 1_000_000) : null;
 
   const routes = useRoutes();
+  const places = usePlaces();
   const images = useImages();
   const flora = useNature("flora");
   const fauna = useNature("fauna");
@@ -37,6 +38,7 @@ export default function Passage() {
 
   const gs = useMemo(() => [...new Set((routes.data ?? []).map((r) => r.group))], [routes.data]);
   const mRoutes = useMemo(() => span && routes.data ? routes.data.filter((r) => anySpan(r.refs, span)) : [], [span, routes.data]);
+  const mPlaces = useMemo(() => span && places.data ? places.data.filter((p) => anyVerse(p.refs, span)) : [], [span, places.data]);
   const mImages = useMemo(() => span && images.data ? images.data.filter((i) => anyVerse(i.refs, span)) : [], [span, images.data]);
   const nature = useMemo(() => {
     const all: { kind: NatureKind; entry: NatureEntry }[] = [];
@@ -48,8 +50,8 @@ export default function Passage() {
   const mParallels = useMemo(() => span && parallels.data ? parallels.data.filter((g) => g.some((s) => overlaps(s, span))) : [], [span, parallels.data]);
   const mHottp = useMemo(() => span && hottp.data ? hottp.data.filter((h) => anyVerse(h.refs, span)) : [], [span, hottp.data]);
 
-  const counts: Record<Tab, number> = { map: mRoutes.length, images: mImages.length, nature: nature.length, parallel: mParallels.length, hottp: mHottp.length };
-  const loading: Record<Tab, boolean> = { map: routes.loading, images: images.loading, nature: flora.loading || fauna.loading || realia.loading, parallel: parallels.loading, hottp: hottp.loading };
+  const counts: Record<Tab, number> = { map: mRoutes.length + mPlaces.length, images: mImages.length, nature: nature.length, parallel: mParallels.length, hottp: mHottp.length };
+  const loading: Record<Tab, boolean> = { map: routes.loading || places.loading, images: images.loading, nature: flora.loading || fauna.loading || realia.loading, parallel: parallels.loading, hottp: hottp.loading };
   const wanted = params.get("tab") as Tab | null;
   const loadedAll = !Object.values(loading).some(Boolean);
   const tab: Tab = wanted && TABS.includes(wanted) ? wanted : (loadedAll ? TABS.find((t) => counts[t] > 0) ?? "map" : "map");
@@ -92,9 +94,10 @@ export default function Passage() {
         ))}
       </nav>
 
-      {tab === "map" && (mRoutes.length
-        ? <RouteBrowser routes={mRoutes} groups={gs} initial={mRoutes.length <= 6 ? mRoutes.map((r) => r.id) : [mRoutes[0].id]} />
-        : <Empty loading={routes.loading} text="這段經文沒有對應的路線。" extra={<Link to="/map">看全部路線</Link>} />)}
+      {tab === "map" && (mRoutes.length || mPlaces.length
+        ? <RouteBrowser routes={mRoutes} groups={gs} places={mPlaces} allPlaces={places.data}
+            initial={mRoutes.length <= 6 ? mRoutes.map((r) => r.id) : [mRoutes[0].id]} />
+        : <Empty loading={routes.loading || places.loading} text="這段經文沒有對應的路線或地名。" extra={<Link to="/map">看全部路線</Link>} />)}
 
       {tab === "images" && (mImages.length ? <ImageGrid images={mImages} /> : <Empty loading={images.loading} text="這段經文沒有對應的圖片。" extra={<Link to="/images">瀏覽圖片庫</Link>} />)}
 

@@ -2,7 +2,7 @@
 
 個人講道備課用的網站(React + TypeScript + Vite)。輸入一段經文,就能看到:
 
-- **地圖路線**:3D 衛星地形,可播放、鏡頭跟隨(MapLibre GL)
+- **地圖與地名**:3D 衛星地形,可播放、鏡頭跟隨(MapLibre GL);標出這段經文提到的聖經地名,點地名看經文出處與希伯來文名稱;播放路線時顯示附近的地名
 - **圖片**:UBS 圖庫中與這段經文有關的照片和插圖(圖片從 UBS 的 CDN 載入)
 - **動植物與器物**:三本手冊中引用這段經文的條目
 - **平行經文**、**經文校勘**(HOTTP,英文)
@@ -22,17 +22,19 @@ npm run build    # 產生 dist/,是純靜態網站,可放在任何地方(base �
 ## 資料
 
 `scripts/build_data.py` 讀取本倉庫的 `ubs-bible-routes`、`images`、`flora-fauna-realia`、`parallel passages`、`HOTTP`,
-以及 `data-src/` 下三個純文字檔(可直接編輯,再執行 `npm run data`):
+以及 `data-src/` 下的文字檔(可直接編輯,再執行 `npm run data`):
 
 | 檔案 | 內容 |
 |---|---|
 | `zh_names.txt` | 路線的中文名稱 |
 | `route_order.txt` | 多段路線的段落順序與方向(只排了有把握的 20 條) |
 | `scripture_refs.txt` | 路線對應的經文,是依路線名稱推斷的,尚未逐條校對 |
+| `place_zh.txt` | 地名的中文名稱(和合本譯名,我整理的,尚未校對;沒列的只顯示英文) |
+| `openbible/merged.txt` | OpenBible.info 的聖經地名座標與經文出處(CC BY 4.0,使用時須標示 OpenBible.info) |
 
 經文位置一律用 UBS 的整數 `BBBCCCVVV`(例如徒 13:5 = 44013005)。
 
 ## 授權
 
-資料 © United Bible Societies,CC BY-SA 4.0;圖片版權屬各自的作者(見每張圖片說明)。
+資料 © United Bible Societies,CC BY-SA 4.0;聖經地名資料取自 [OpenBible.info](https://www.openbible.info/geo/)(CC BY 4.0,經文索引依 ESV 章節);圖片版權屬各自的作者(見每張圖片說明)。
 地圖底圖使用 Esri 衛星影像、OpenStreetMap 與 AWS Terrain Tiles,正式公開前請確認各自的使用條款。
