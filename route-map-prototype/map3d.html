@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>聖經路線地圖 3D</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/maplibre-gl/4.7.1/maplibre-gl.min.css">
+<style>
+  :root { --bg:#fff; --fg:#222; --muted:#666; --line:#ddd; --accent:#b4432a; --hover:#f6efe9; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#1e1e1e; --fg:#eee; --muted:#aaa; --line:#3a3a3a; --accent:#ff8a6b; --hover:#2c2623; }
+  }
+  * { box-sizing: border-box; }
+  html, body { height:100%; margin:0; background:var(--bg); color:var(--fg);
+    font:14px/1.4 system-ui, "Noto Sans TC", sans-serif; }
+  #app { display:flex; height:100%; }
+  #side { width:320px; max-width:45%; display:flex; flex-direction:column; border-right:1px solid var(--line); }
+  #head { padding:12px; border-bottom:1px solid var(--line); }
+  #head h1 { font-size:16px; margin:0 0 8px; display:flex; justify-content:space-between; align-items:baseline; }
+  #head h1 a { font-size:12px; font-weight:400; color:var(--accent); }
+  #q { width:100%; padding:6px 8px; border:1px solid var(--line); border-radius:4px; background:var(--bg); color:var(--fg); }
+  .row { margin-top:8px; display:flex; flex-wrap:wrap; gap:6px 12px; align-items:center; color:var(--muted); }
+  .row label, .row button { white-space:nowrap; }
+  .row button, .row select { border:1px solid var(--line); background:var(--bg); color:var(--fg); border-radius:4px; padding:3px 8px; cursor:pointer; }
+  .row button:disabled { opacity:.5; cursor:default; }
+  .row input[type=range] { width:90px; }
+  #playname { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:150px; }
+  #list { flex:1; overflow:auto; }
+  .grp { position:sticky; top:0; background:var(--bg); padding:6px 12px; font-weight:600;
+    border-bottom:1px solid var(--line); color:var(--accent); }
+  .item { padding:6px 12px; cursor:pointer; border-bottom:1px solid var(--line); display:flex; gap:8px; }
+  .item:hover { background:var(--hover); }
+  .item.on { background:var(--hover); box-shadow:inset 3px 0 var(--accent); }
+  .item .t small { display:block; color:var(--muted); font-size:12px; }
+  .item .n { color:var(--muted); min-width:2.5em; font-variant-numeric:tabular-nums; }
+  #foot { padding:8px 12px; font-size:12px; color:var(--muted); border-top:1px solid var(--line); }
+  #foot a { color:inherit; }
+  #map { flex:1; }
+  .badge { width:20px; height:20px; border-radius:50%; background:#fff; border:2px solid; color:#222;
+    font:700 11px/16px system-ui; text-align:center; }
+  .dot { width:14px; height:14px; border-radius:50%; border:2px solid #fff; box-shadow:0 0 3px #0008; }
+  .runner { width:16px; height:16px; border-radius:50%; background:#ffd400; border:3px solid #222; }
+  @media (max-width:640px) {
+    #app { flex-direction:column-reverse; }
+    #side { width:100%; max-width:none; height:45%; border-right:0; border-top:1px solid var(--line); }
+  }
+</style>
+</head>
+<body>
+<div id="app">
+  <aside id="side">
+    <div id="head">
+      <h1>聖經路線地圖 3D <a href="index.html">切換 2D</a></h1>
+      <input id="q" type="search" placeholder="搜尋路線(中文、英文或編號)">
+      <div class="row">
+        <label><input id="all" type="checkbox"> 顯示全部</label>
+        <label><input id="arrows" type="checkbox" checked> 箭頭</label>
+        <label><input id="nums" type="checkbox" checked> 編號</label>
+        <button id="clear">清除</button>
+        <span id="count"></span>
+      </div>
+      <div class="row">
+        <label>底圖 <select id="base"><option value="osm">街道</option><option value="sat">衛星</option></select></label>
+        <label>地形 <input id="exag" type="range" min="1" max="6" step="0.5" value="2"></label>
+        <label><input id="tilt" type="checkbox" checked> 傾斜</label>
+      </div>
+      <div class="row">
+        <button id="playbtn" disabled>▶ 播放</button>
+        <label><input id="follow" type="checkbox" checked> 鏡頭跟隨</label>
+        <span id="playname">先點選一條路線</span>
+      </div>
+    </div>
+    <div id="list"></div>
+    <div id="foot">
+      路線資料 © United Bible Societies 2023,路線製作:Leen Ritmeyer。
+      <a href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>
+    </div>
+  </aside>
+  <div id="map"></div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/maplibre-gl/4.7.1/maplibre-gl.min.js"></script>
+<script src="routes.js"></script>
+<script>
+const palette = ["#b4432a", "#2a6fb4", "#2a8f5a", "#8a4fb4", "#c48a1a", "#1a8f9c", "#b42a6f"];
+const groups = [...new Set(ROUTES.map(r => r.group))];
+const colorOf = r => palette[groups.indexOf(r.group) % palette.length];
+const $ = id => document.getElementById(id);
+const ll = p => [p[1], p[0]];                    // routes.js stores [lat, lon]; MapLibre wants [lon, lat]
+
+const map = new maplibregl.Map({
+  container: "map",
+  center: [35.5, 32], zoom: 6.5, pitch: 55, bearing: 0, maxPitch: 80,
+  style: {
+    version: 8,
+    sources: {
+      osm: { type: "raster", tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"], tileSize: 256, maxzoom: 18,
+             attribution: "© OpenStreetMap contributors" },
+      sat: { type: "raster", tiles: ["https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"],
+             tileSize: 256, maxzoom: 17, attribution: "Imagery © Esri, Maxar, Earthstar Geographics" },
+      dem: { type: "raster-dem", tiles: ["https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png"],
+             tileSize: 256, maxzoom: 14, encoding: "terrarium",
+             attribution: "Terrain: Mapzen / AWS Terrain Tiles" },
+      shade: { type: "raster-dem", tiles: ["https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png"],
+               tileSize: 256, maxzoom: 14, encoding: "terrarium" }
+    },
+    layers: [
+      { id: "osm", type: "raster", source: "osm" },
+      { id: "sat", type: "raster", source: "sat", layout: { visibility: "none" } },
+      { id: "hill", type: "hillshade", source: "shade", paint: { "hillshade-exaggeration": 0.4 } }
+    ]
+  }
+});
+map.addControl(new maplibregl.NavigationControl({ visualizePitch: true }));
+
+const empty = { type: "FeatureCollection", features: [] };
+const selected = new Set();
+let markers = [];
+
+function arrowImage() {
+  const c = document.createElement("canvas"); c.width = c.height = 24;
+  const g = c.getContext("2d");
+  g.strokeStyle = "#fff"; g.lineWidth = 3.5; g.lineCap = "round"; g.lineJoin = "round";
+  g.beginPath(); g.moveTo(7, 5); g.lineTo(17, 12); g.lineTo(7, 19); g.stroke();
+  return g.getImageData(0, 0, 24, 24);
+}
+
+map.on("load", () => {
+  map.setTerrain({ source: "dem", exaggeration: +$("exag").value });
+  map.addImage("arrow", arrowImage());
+  map.addSource("routes", { type: "geojson", data: empty });
+  map.addSource("trail", { type: "geojson", data: empty });
+  map.addLayer({ id: "route-line", type: "line", source: "routes",
+    layout: { "line-cap": "round", "line-join": "round" },
+    paint: { "line-color": ["get", "color"], "line-width": 4, "line-opacity": 0.9 } });
+  map.addLayer({ id: "route-arrows", type: "symbol", source: "routes",
+    layout: { "symbol-placement": "line", "symbol-spacing": 70, "icon-image": "arrow", "icon-size": 0.8,
+              "icon-allow-overlap": true, "icon-ignore-placement": true, "icon-rotation-alignment": "map",
+              "icon-pitch-alignment": "map" } });
+  map.addLayer({ id: "trail-line", type: "line", source: "trail",
+    paint: { "line-color": "#ffd400", "line-width": 6 } });
+  render();
+});
+
+function badge(html, lngLat, cls) {
+  const el = document.createElement("div");
+  el.innerHTML = html;
+  return new maplibregl.Marker({ element: el.firstChild }).setLngLat(lngLat);
+}
+
+function refresh() {
+  const rs = ROUTES.filter(r => selected.has(r.id));
+  map.getSource("routes").setData({ type: "FeatureCollection", features: rs.map(r => ({
+    type: "Feature", properties: { color: colorOf(r) },
+    geometry: { type: "MultiLineString", coordinates: r.lines.map(l => l.map(ll)) } })) });
+  markers.forEach(m => m.remove()); markers = [];
+  rs.forEach(r => {
+    const color = colorOf(r);
+    if ($("nums").checked && r.lines.length > 1) {
+      r.lines.forEach((l, i) => markers.push(
+        badge(`<div class="badge" style="border-color:${color}">${i + 1}</div>`, ll(l[0])).addTo(map)));
+    }
+    const last = r.lines[r.lines.length - 1];
+    markers.push(badge('<div class="dot" style="background:#2a8f5a"></div>', ll(r.lines[0][0])).addTo(map));
+    markers.push(badge('<div class="dot" style="background:#c0392b"></div>', ll(last[last.length - 1])).addTo(map));
+  });
+  map.setLayoutProperty("route-arrows", "visibility", $("arrows").checked ? "visible" : "none");
+}
+
+function fit(rs) {
+  const b = new maplibregl.LngLatBounds();
+  rs.forEach(r => r.lines.forEach(l => l.forEach(p => b.extend(ll(p)))));
+  map.fitBounds(b, { padding: 60, maxZoom: 11, pitch: $("tilt").checked ? 55 : 0, bearing: 0, duration: 1200 });
+}
+
+// ---- list ----
+const listEl = $("list"), rows = new Map();
+function render(filter = "") {
+  const f = filter.trim().toLowerCase();
+  listEl.innerHTML = ""; rows.clear();
+  let n = 0;
+  groups.forEach(g => {
+    const rs = ROUTES.filter(r => r.group === g && (!f || `${r.num} ${r.zh} ${r.name}`.toLowerCase().includes(f)));
+    if (!rs.length) return;
+    const h = document.createElement("div"); h.className = "grp"; h.textContent = g; listEl.appendChild(h);
+    rs.forEach(r => {
+      const el = document.createElement("div");
+      el.className = "item" + (selected.has(r.id) ? " on" : "");
+      el.innerHTML = `<span class="n">${r.num}</span><span class="t"></span>`;
+      const t = el.lastChild; t.append(r.zh || r.name);
+      if (r.zh) { const en = document.createElement("small"); en.textContent = r.name; t.appendChild(en); }
+      el.onclick = () => toggle(r);
+      listEl.appendChild(el); rows.set(r.id, el); n++;
+    });
+  });
+  $("count").textContent = `${n} 條`;
+}
+
+function toggle(r) {
+  if (selected.has(r.id)) { selected.delete(r.id); }
+  else { selected.add(r.id); fit([r]); setCurrent(r); }
+  rows.get(r.id)?.classList.toggle("on", selected.has(r.id));
+  refresh();
+}
+
+function clearAll() {
+  setCurrent(null); selected.clear(); rows.forEach(el => el.classList.remove("on")); $("all").checked = false; refresh();
+}
+
+// ---- playback ----
+let current = null, anim = null;
+const playBtn = $("playbtn");
+function setCurrent(r) {
+  stopPlay(); current = r; playBtn.disabled = !r;
+  $("playname").textContent = r ? `${r.num}. ${r.zh || r.name}` : "先點選一條路線";
+}
+function stopPlay() {
+  if (anim) { cancelAnimationFrame(anim.raf); anim.runner.remove(); map.getSource("trail").setData(empty); anim = null; }
+  playBtn.textContent = "▶ 播放";
+}
+const dist = (a, b) => {                       // metres, equirectangular is plenty at this scale
+  const k = Math.PI / 180, x = (b[1] - a[1]) * k * Math.cos((a[0] + b[0]) * k / 2), y = (b[0] - a[0]) * k;
+  return Math.hypot(x, y) * 6371000;
+};
+function startPlay() {
+  const legs = current.lines;
+  const lens = legs.map(pts => pts.slice(1).reduce((a, p, k) => a + dist(pts[k], p), 0));
+  const total = lens.reduce((a, b) => a + b, 0) || 1;
+  const duration = Math.min(25000, Math.max(8000, total / 80));
+  const el = document.createElement("div"); el.className = "runner";
+  const runner = new maplibregl.Marker({ element: el }).setLngLat(ll(legs[0][0])).addTo(map);
+  const t0 = performance.now();
+  anim = { runner };
+  playBtn.textContent = "■ 停止";
+  if ($("follow").checked) map.easeTo({ center: ll(legs[0][0]), zoom: Math.max(map.getZoom(), 8), pitch: 60, duration: 800 });
+  const step = now => {
+    let d = Math.min(1, (now - t0) / duration) * total;
+    const done = []; let p = legs[0][0];
+    for (let li = 0; li < legs.length; li++) {
+      const pts = legs[li];
+      if (d >= lens[li] && li < legs.length - 1) { done.push(pts.map(ll)); d -= lens[li]; continue; }
+      const part = [ll(pts[0])]; let acc = 0, pos = pts[0];
+      for (let k = 1; k < pts.length; k++) {
+        const seg = dist(pts[k - 1], pts[k]);
+        if (acc + seg >= d) {
+          const f = (d - acc) / (seg || 1);
+          pos = [pts[k - 1][0] + (pts[k][0] - pts[k - 1][0]) * f, pts[k - 1][1] + (pts[k][1] - pts[k - 1][1]) * f];
+          part.push(ll(pos)); break;
+        }
+        acc += seg; part.push(ll(pts[k])); pos = pts[k];
+      }
+      done.push(part); p = pos; break;
+    }
+    map.getSource("trail").setData({ type: "Feature", properties: {}, geometry: { type: "MultiLineString", coordinates: done } });
+    runner.setLngLat(ll(p));
+    if ($("follow").checked) map.jumpTo({ center: ll(p) });
+    if (now - t0 < duration) anim.raf = requestAnimationFrame(step);
+    else playBtn.textContent = "▶ 重播";
+  };
+  anim.raf = requestAnimationFrame(step);
+}
+playBtn.onclick = () => {
+  if (!current) return;
+  if (anim && playBtn.textContent.startsWith("■")) stopPlay(); else { stopPlay(); startPlay(); }
+};
+
+// ---- controls ----
+$("q").addEventListener("input", e => render(e.target.value));
+$("clear").onclick = clearAll;
+$("all").onchange = e => {
+  clearAll();
+  if (e.target.checked) {
+    ROUTES.forEach(r => selected.add(r.id)); rows.forEach(el => el.classList.add("on"));
+    $("all").checked = true; refresh(); fit(ROUTES);
+  }
+};
+$("arrows").onchange = $("nums").onchange = refresh;
+$("base").onchange = e => {
+  map.setLayoutProperty("osm", "visibility", e.target.value === "osm" ? "visible" : "none");
+  map.setLayoutProperty("sat", "visibility", e.target.value === "sat" ? "visible" : "none");
+};
+$("exag").oninput = e => map.setTerrain({ source: "dem", exaggeration: +e.target.value });
+$("tilt").onchange = e => map.easeTo({ pitch: e.target.checked ? 55 : 0, duration: 600 });
+</script>
+</body>
+</html>
