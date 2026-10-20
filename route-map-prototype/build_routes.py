@@ -41,6 +41,20 @@ with open(os.path.join(os.path.dirname(__file__), "zh_names.txt"), encoding="utf
             k, v = line.rstrip("\n").split("|", 1)
             ZH[k] = v
 
+ORDER = {}
+with open(os.path.join(os.path.dirname(__file__), "route_order.txt"), encoding="utf-8") as fh:
+    for line in fh:
+        if "|" in line and not line.startswith("#"):
+            k, v = line.rstrip("\n").split("|", 1)
+            ORDER[k] = v.split(",")
+
+def reorder(base, segs):
+    out = []
+    for tok in ORDER[base]:
+        seg = segs[int(tok.rstrip("r"))]
+        out.append(seg[::-1] if tok.endswith("r") else seg)
+    return out
+
 routes = []
 for path in sorted(glob.glob(os.path.join(SRC, "*.geojson"))):
     base = os.path.basename(path)[:-len(".geojson")]
@@ -52,11 +66,16 @@ for path in sorted(glob.glob(os.path.join(SRC, "*.geojson"))):
     segs = [[[round(y, 5), round(x, 5)] for x, y in l] for g in features(d) for l in lines(g)]
     if not segs:
         continue
+    if base in ORDER:
+        segs = reorder(base, segs)
+        ORDER.pop(base)
     routes.append({"id": base, "num": num, "name": name, "zh": ZH.get(base, ""), "group": group_of(num), "lines": segs})
 
 out = os.path.join(os.path.dirname(__file__), "routes.js")
 with open(out, "w", encoding="utf-8") as fh:
     fh.write("window.ROUTES = " + json.dumps(routes, ensure_ascii=False, separators=(",", ":")) + ";\n")
+if ORDER:
+    raise SystemExit(f"route_order.txt has unknown routes: {list(ORDER)}")
 missing = [r["id"] for r in routes if not r["zh"]]
 if missing:
     print("missing zh:", missing)

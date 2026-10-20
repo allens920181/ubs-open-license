@@ -1,0 +1,10 @@
+# 路線順序:「檔名|段落順序」。數字是原始資料中的段落編號(從 0 開始),後面加 r 表示反向,同一段可重複使用。
+# 順序依經文判斷,請對照地圖校對。
+141. Deportation to Assyria|1,0,2
+155. Jonah|3r,2,1,0r
+198. Philip and the Ethiopian Eunuch|0,2r,1r
+200. Paul’s journey from Tarsus to Antioch|0r,1r,2,3
+202. First Missionary Journey|2r,6,3,4,0,1,1r,0r,5,2
+203. Second Missionary Journey|0r,2r,1r,3,6r,4,7,5
+204. Third Missionary Journey|5,6,1r,2,0r,0,2r,1,3,4r
+205. Paul's Voyage to Rome|1,2,3,0r
