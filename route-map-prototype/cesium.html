@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>聖經路線地圖 Cesium</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cesium@1.123.1/Build/Cesium/Widgets/widgets.css">
+<style>
+  :root { --bg:#fff; --fg:#222; --muted:#666; --line:#ddd; --accent:#b4432a; --hover:#f6efe9; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#1e1e1e; --fg:#eee; --muted:#aaa; --line:#3a3a3a; --accent:#ff8a6b; --hover:#2c2623; }
+  }
+  * { box-sizing: border-box; }
+  html, body { height:100%; margin:0; background:var(--bg); color:var(--fg);
+    font:14px/1.4 system-ui, "Noto Sans TC", sans-serif; }
+  #app { display:flex; height:100%; }
+  #side { width:340px; max-width:45%; display:flex; flex-direction:column; border-right:1px solid var(--line); }
+  #head { padding:12px; border-bottom:1px solid var(--line); }
+  #head h1 { font-size:16px; margin:0 0 8px; display:flex; justify-content:space-between; align-items:baseline; }
+  #head h1 span a { font-size:12px; font-weight:400; color:var(--accent); margin-left:8px; }
+  #q { width:100%; padding:6px 8px; border:1px solid var(--line); border-radius:4px; background:var(--bg); color:var(--fg); }
+  #hint { margin-top:4px; font-size:12px; color:var(--muted); min-height:1.2em; }
+  .row { margin-top:8px; display:flex; flex-wrap:wrap; gap:6px 12px; align-items:center; color:var(--muted); }
+  .row label, .row button { white-space:nowrap; }
+  .row button, .row select { border:1px solid var(--line); background:var(--bg); color:var(--fg); border-radius:4px; padding:3px 8px; cursor:pointer; }
+  .row button:disabled { opacity:.5; cursor:default; }
+  #playname { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:170px; }
+  #verse { margin-top:8px; padding:6px 8px; border-left:3px solid var(--accent); background:var(--hover); font-size:13px; display:none; }
+  #verse b { color:var(--accent); }
+  #terrain { margin-top:8px; font-size:12px; color:var(--muted); }
+  #terrain input { width:100%; margin-top:4px; padding:4px 6px; border:1px solid var(--line); border-radius:4px; background:var(--bg); color:var(--fg); }
+  #list { flex:1; overflow:auto; }
+  .grp { position:sticky; top:0; background:var(--bg); padding:6px 12px; font-weight:600;
+    border-bottom:1px solid var(--line); color:var(--accent); z-index:1; }
+  .item { padding:6px 12px; cursor:pointer; border-bottom:1px solid var(--line); display:flex; gap:8px; }
+  .item:hover { background:var(--hover); }
+  .item.on { background:var(--hover); box-shadow:inset 3px 0 var(--accent); }
+  .item .t small { display:block; color:var(--muted); font-size:12px; }
+  .item .t .ref { color:var(--accent); }
+  .item .n { color:var(--muted); min-width:2.5em; font-variant-numeric:tabular-nums; }
+  #foot { padding:8px 12px; font-size:12px; color:var(--muted); border-top:1px solid var(--line); }
+  #foot a { color:inherit; }
+  #map { flex:1; position:relative; }
+  .cesium-viewer-bottom { opacity:.85; }
+  @media (max-width:640px) {
+    #app { flex-direction:column-reverse; }
+    #side { width:100%; max-width:none; height:48%; border-right:0; border-top:1px solid var(--line); }
+  }
+</style>
+</head>
+<body>
+<div id="app">
+  <aside id="side">
+    <div id="head">
+      <h1>聖經路線地圖 Cesium <span><a href="index.html">2D</a><a href="map3d.html">3D(MapLibre)</a></span></h1>
+      <input id="q" type="search" placeholder="搜尋經文(徒 13、創 22:1-19)或路線名稱">
+      <div id="hint"></div>
+      <div class="row">
+        <label><input id="all" type="checkbox"> 顯示全部</label>
+        <label><input id="nums" type="checkbox" checked> 編號</label>
+        <label><input id="labels" type="checkbox" checked> 地名</label>
+        <button id="clear">清除</button>
+        <span id="count"></span>
+      </div>
+      <div class="row">
+        <button id="playbtn" disabled>▶ 播放</button>
+        <label><input id="follow" type="checkbox" checked> 鏡頭跟隨</label>
+        <span id="playname">先點選一條路線</span>
+      </div>
+      <div id="verse"></div>
+      <div id="terrain"></div>
+    </div>
+    <div id="list"></div>
+    <div id="foot">
+      路線資料 © United Bible Societies 2023,路線製作:Leen Ritmeyer。
+      <a href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>
+    </div>
+  </aside>
+  <div id="map"></div>
+</div>
+
+<script>window.CESIUM_BASE_URL = "https://cdn.jsdelivr.net/npm/cesium@1.123.1/Build/Cesium/";</script>
+<script src="https://cdn.jsdelivr.net/npm/cesium@1.123.1/Build/Cesium/Cesium.js"></script>
+<script src="refs.js"></script>
+<script src="routes.js"></script>
+<script>
+const $ = id => document.getElementById(id);
+const palette = ["#ff5a36", "#3da5ff", "#38d27a", "#c47bff", "#ffb82e", "#2fd6e0", "#ff4fa0"];
+const groups = [...new Set(ROUTES.map(r => r.group))];
+const colorOf = r => palette[groups.indexOf(r.group) % palette.length];
+ROUTES.forEach(r => { r.refs = Refs.parseData(r.ref); r.refText = Refs.format(r.refs); });
+
+// ---- Cesium ion token (only needed for real 3D terrain) ----
+let token = new URLSearchParams(location.search).get("token") || "";
+try { token = token || localStorage.getItem("cesiumIonToken") || ""; } catch (e) {}
+const hasTerrain = !!token;
+if (token) Cesium.Ion.defaultAccessToken = token;
+
+const esri = (path, maxLevel) => new Cesium.UrlTemplateImageryProvider({
+  url: `https://server.arcgisonline.com/ArcGIS/rest/services/${path}/MapServer/tile/{z}/{y}/{x}`,
+  maximumLevel: maxLevel, credit: "Esri, Maxar, Earthstar Geographics"
+});
+
+const viewer = new Cesium.Viewer("map", {
+  baseLayer: new Cesium.ImageryLayer(esri("World_Imagery", 17)),
+  baseLayerPicker: false, geocoder: false, homeButton: false, sceneModePicker: false, navigationHelpButton: false,
+  animation: false, timeline: false, fullscreenButton: false, infoBox: false, selectionIndicator: false,
+  terrainProvider: new Cesium.EllipsoidTerrainProvider(),
+  requestRenderMode: false
+});
+viewer.scene.globe.enableLighting = false;
+viewer.scene.globe.depthTestAgainstTerrain = true;
+const labelLayer = viewer.imageryLayers.addImageryProvider(esri("Reference/World_Boundaries_and_Places", 14));
+
+if (hasTerrain) {
+  Cesium.createWorldTerrainAsync().then(t => { viewer.terrainProvider = t; viewer.scene.verticalExaggeration = 1.5; })
+    .catch(() => { $("terrain").textContent = "地形載入失敗,請檢查金鑰是否正確。"; });
+  $("terrain").textContent = "已啟用 Cesium World Terrain。";
+} else {
+  $("terrain").innerHTML = '目前是平面地球(沒有地形)。要啟用真實 3D 地形,請貼上免費的 <a href="https://ion.cesium.com/tokens" target="_blank" rel="noopener">Cesium ion 金鑰</a>:<input id="tok" placeholder="貼上金鑰後按 Enter">';
+  $("tok").addEventListener("keydown", e => {
+    if (e.key !== "Enter" || !e.target.value.trim()) return;
+    try { localStorage.setItem("cesiumIonToken", e.target.value.trim()); } catch (err) {}
+    location.reload();
+  });
+}
+
+viewer.camera.setView({ destination: Cesium.Cartesian3.fromDegrees(35.5, 24.5, 1400000),
+  orientation: { heading: 0, pitch: Cesium.Math.toRadians(-55), roll: 0 } });
+
+// ---- drawing ----
+const ll = p => Cesium.Cartesian3.fromDegrees(p[1], p[0]);     // routes.js stores [lat, lon]
+const selected = new Set();
+const drawn = new Map();                                        // route id -> entities
+
+const iconCache = new Map();
+function icon(text, color) {
+  const key = text + color;
+  if (!iconCache.has(key)) {
+    const c = document.createElement("canvas"); c.width = c.height = 40;
+    const g = c.getContext("2d");
+    g.beginPath(); g.arc(20, 20, 16, 0, 7); g.fillStyle = text ? "#fff" : color; g.fill();
+    g.lineWidth = text ? 4 : 5; g.strokeStyle = text ? color : "#fff"; g.stroke();
+    if (text) { g.fillStyle = "#222"; g.font = "bold 19px system-ui"; g.textAlign = "center"; g.textBaseline = "middle"; g.fillText(text, 20, 21); }
+    iconCache.set(key, c);
+  }
+  return iconCache.get(key);
+}
+function pin(pos, text, color) {
+  return viewer.entities.add({ position: pos, billboard: { image: icon(text, color), scale: text ? 0.8 : 0.55,
+    heightReference: Cesium.HeightReference.CLAMP_TO_GROUND, disableDepthTestDistance: Number.POSITIVE_INFINITY } });
+}
+
+function draw(r) {
+  const color = Cesium.Color.fromCssColorString(colorOf(r));
+  const ents = [];
+  r.lines.forEach(pts => {
+    const positions = pts.map(ll);
+    ents.push(viewer.entities.add({ polyline: { positions, width: 11, clampToGround: true, zIndex: 1,
+      material: Cesium.Color.BLACK.withAlpha(0.75) } }));
+    ents.push(viewer.entities.add({ polyline: { positions, width: 6, clampToGround: true, zIndex: 2, material: color } }));
+  });
+  if (r.lines.length > 1) r.lines.forEach((l, i) => { const e = pin(ll(l[0]), String(i + 1), colorOf(r)); e.isNum = true; ents.push(e); });
+  const last = r.lines[r.lines.length - 1];
+  ents.push(pin(ll(r.lines[0][0]), "", "#2a8f5a"), pin(ll(last[last.length - 1]), "", "#c0392b"));
+  drawn.set(r.id, ents);
+  applyNums();
+}
+function undraw(r) { (drawn.get(r.id) || []).forEach(e => viewer.entities.remove(e)); drawn.delete(r.id); }
+function applyNums() { drawn.forEach(es => es.forEach(e => { if (e.isNum) e.show = $("nums").checked; })); }
+
+function fit(rs) {
+  const pts = rs.flatMap(r => r.lines.flat().map(ll));
+  const sphere = Cesium.BoundingSphere.fromPoints(pts);
+  viewer.camera.flyToBoundingSphere(sphere, { duration: 1.6,
+    offset: new Cesium.HeadingPitchRange(0, Cesium.Math.toRadians(-50), Math.max(sphere.radius * 2.6, 20000)) });
+}
+
+// ---- list, search by name or scripture ----
+const listEl = $("list"), rows = new Map();
+let query = null;          // parsed scripture query, or null
+
+function matches(r, f) {
+  if (query) return r.refs.some(x => Refs.overlaps(x, query));
+  return !f || `${r.num} ${r.zh} ${r.name} ${r.refText}`.toLowerCase().includes(f);
+}
+
+function render(filter = "") {
+  const f = filter.trim().toLowerCase();
+  query = Refs.parseQuery(filter);
+  $("hint").textContent = query ? `經文搜尋:${Refs.formatLong([query])}` : "";
+  listEl.innerHTML = ""; rows.clear();
+  let n = 0;
+  groups.forEach(g => {
+    const rs = ROUTES.filter(r => r.group === g && matches(r, f));
+    if (!rs.length) return;
+    const h = document.createElement("div"); h.className = "grp"; h.textContent = g; listEl.appendChild(h);
+    rs.forEach(r => {
+      const el = document.createElement("div");
+      el.className = "item" + (selected.has(r.id) ? " on" : "");
+      el.innerHTML = `<span class="n">${r.num}</span><span class="t"></span>`;
+      const t = el.lastChild; t.append(r.zh || r.name);
+      const sub = document.createElement("small");
+      sub.append(r.name);
+      if (r.refText) { const rf = document.createElement("span"); rf.className = "ref"; rf.textContent = "  " + r.refText; sub.append(rf); }
+      t.appendChild(sub);
+      el.onclick = () => toggle(r);
+      listEl.appendChild(el); rows.set(r.id, el); n++;
+    });
+  });
+  $("count").textContent = `${n} 條`;
+  if (query && !n) $("hint").textContent += ",沒有對應的路線";
+}
+
+function showVerse(r) {
+  const v = $("verse");
+  if (!r || !r.refs.length) { v.style.display = r ? "block" : "none"; if (r) v.textContent = "這條路線還沒有標註經文。"; return; }
+  v.style.display = "block"; v.innerHTML = "";
+  const b = document.createElement("b"); b.textContent = "經文 "; v.append(b, Refs.formatLong(r.refs));
+}
+
+function toggle(r) {
+  if (selected.has(r.id)) { selected.delete(r.id); undraw(r); if (current === r) { setCurrent(null); showVerse(null); } }
+  else { selected.add(r.id); draw(r); fit([r]); setCurrent(r); showVerse(r); }
+  rows.get(r.id)?.classList.toggle("on", selected.has(r.id));
+}
+function clearAll() {
+  setCurrent(null); showVerse(null);
+  ROUTES.forEach(r => { if (selected.has(r.id)) undraw(r); });
+  selected.clear(); rows.forEach(el => el.classList.remove("on")); $("all").checked = false;
+}
+
+// ---- playback ----
+let current = null, anim = null, heading = 0;
+const playBtn = $("playbtn");
+function setCurrent(r) { stopPlay(); current = r; playBtn.disabled = !r; $("playname").textContent = r ? `${r.num}. ${r.zh || r.name}` : "先點選一條路線"; }
+
+function stopPlay() {
+  if (anim) {
+    cancelAnimationFrame(anim.raf); viewer.entities.remove(anim.runner); anim.trails.forEach(e => viewer.entities.remove(e));
+    viewer.camera.lookAtTransform(Cesium.Matrix4.IDENTITY); anim = null;
+  }
+  playBtn.textContent = "▶ 播放";
+}
+const dist = (a, b) => {
+  const k = Math.PI / 180, x = (b[1] - a[1]) * k * Math.cos((a[0] + b[0]) * k / 2), y = (b[0] - a[0]) * k;
+  return Math.hypot(x, y) * 6371000;
+};
+const bearingTo = (a, b) => {
+  const k = Math.PI / 180, dl = (b[1] - a[1]) * k, y = Math.sin(dl) * Math.cos(b[0] * k),
+        x = Math.cos(a[0] * k) * Math.sin(b[0] * k) - Math.sin(a[0] * k) * Math.cos(b[0] * k) * Math.cos(dl);
+  return Math.atan2(y, x);
+};
+const lerpAngle = (a, b, t) => a + (((b - a + 3 * Math.PI) % (2 * Math.PI)) - Math.PI) * t;
+function headingPoint(legs, p) {
+  let best = null, bd = Infinity;
+  for (const pts of legs) for (let k = 0; k < pts.length; k++) { const d = dist(p, pts[k]); if (d < bd) { bd = d; best = [pts, k]; } }
+  const [pts, k] = best;
+  for (let j = k + 1; j < pts.length; j++) if (dist(p, pts[j]) > 30000) return pts[j];
+  return pts.length - 1 > k ? pts[pts.length - 1] : null;
+}
+
+function startPlay() {
+  const legs = current.lines;
+  const lens = legs.map(pts => pts.slice(1).reduce((a, p, k) => a + dist(pts[k], p), 0));
+  const total = lens.reduce((a, b) => a + b, 0) || 1;
+  const duration = Math.min(40000, Math.max(12000, total / 50));
+  // The trail is built from small static chunks: a clamped polyline whose positions change is rebuilt
+  // asynchronously and never finishes drawing if it is updated every few frames.
+  const trails = [], made = legs.map(() => 0), CH = 8;
+  const reveal = (i, pts, complete) => {
+    let m = made[i];
+    for (;;) {
+      const end = Math.min(m + CH, pts.length - 1);
+      if (end - m < 1 || (!complete && end - m < CH)) break;
+      trails.push(viewer.entities.add({ polyline: { positions: pts.slice(m, end + 1).map(ll), width: 10, clampToGround: true, zIndex: 3,
+        material: Cesium.Color.fromCssColorString("#ffd400") } }));
+      m = end;
+    }
+    made[i] = m;
+  };
+  const runner = viewer.entities.add({ position: ll(legs[0][0]), point: { pixelSize: 16, color: Cesium.Color.fromCssColorString("#ffd400"),
+    outlineColor: Cesium.Color.BLACK, outlineWidth: 3, heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
+    disableDepthTestDistance: Number.POSITIVE_INFINITY } });
+  anim = { runner, trails, raf: 0 };
+  playBtn.textContent = "■ 停止";
+  const t0 = performance.now();
+  heading = viewer.camera.heading;
+  const range = Math.max(60000, Math.min(250000, Cesium.Cartesian3.magnitude(viewer.camera.positionWC) - 6371000));
+
+  const step = now => {
+    let d = Math.min(1, (now - t0) / duration) * total;
+    const done = []; let p = legs[0][0], cur = 0;
+    for (let li = 0; li < legs.length; li++) {
+      const pts = legs[li]; cur = li;
+      if (d >= lens[li] && li < legs.length - 1) { done.push(pts); d -= lens[li]; continue; }
+      const part = [pts[0]]; let acc = 0, pos = pts[0];
+      for (let k = 1; k < pts.length; k++) {
+        const seg = dist(pts[k - 1], pts[k]);
+        if (acc + seg >= d) {
+          const f = (d - acc) / (seg || 1);
+          pos = [pts[k - 1][0] + (pts[k][0] - pts[k - 1][0]) * f, pts[k - 1][1] + (pts[k][1] - pts[k - 1][1]) * f];
+          part.push(pos); break;
+        }
+        acc += seg; part.push(pts[k]); pos = pts[k];
+      }
+      done.push(part); p = pos; break;
+    }
+    runner.position = ll(p);
+    const finished = now - t0 >= duration;
+    done.forEach((pts, i) => reveal(i, pts, i < cur || finished));
+    if ($("follow").checked) {
+      const ahead = headingPoint(legs, p);
+      if (ahead) heading = lerpAngle(heading, bearingTo(p, ahead), 0.03);
+      const h = viewer.scene.globe.getHeight(Cesium.Cartographic.fromDegrees(p[1], p[0])) || 0;
+      viewer.camera.lookAt(Cesium.Cartesian3.fromDegrees(p[1], p[0], h),
+        new Cesium.HeadingPitchRange(heading, Cesium.Math.toRadians(-38), range));
+    }
+    if (now - t0 < duration) anim.raf = requestAnimationFrame(step);
+    else { playBtn.textContent = "▶ 重播"; viewer.camera.lookAtTransform(Cesium.Matrix4.IDENTITY); }
+  };
+  anim.raf = requestAnimationFrame(step);
+}
+playBtn.onclick = () => {
+  if (!current) return;
+  if (anim && playBtn.textContent.startsWith("■")) stopPlay(); else { stopPlay(); startPlay(); }
+};
+
+// ---- controls ----
+$("q").addEventListener("input", e => render(e.target.value));
+$("clear").onclick = clearAll;
+$("all").onchange = e => {
+  clearAll();
+  if (e.target.checked) {
+    ROUTES.forEach(r => { selected.add(r.id); draw(r); });
+    rows.forEach(el => el.classList.add("on")); $("all").checked = true; fit(ROUTES);
+  }
+};
+$("nums").onchange = applyNums;
+$("labels").onchange = e => { labelLayer.show = e.target.checked; };
+render();
+</script>
+</body>
+</html>

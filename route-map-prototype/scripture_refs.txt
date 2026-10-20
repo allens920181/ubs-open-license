@@ -1,0 +1,170 @@
+# 路線對應經文:「檔名|經文」。多段用分號,書卷用 USFM 三碼,例:GEN 12:4-9; ACT 13:1-14:28
+# 經文是依路線名稱推斷的,尚未逐條校對;沒有把握的路線(大衛的王國系列等)先不標。
+001. Abram's Journey to Haran|GEN 11:31-32; GEN 12:4
+002. Abram's Journey to Damascus|GEN 12:4-5
+003. Abram's Journey to Shechem|GEN 12:6-7
+004. Abram's Journey from the Negev to Egypt|GEN 12:8-10
+005. Abram's Journey to Egypt|GEN 12:10-20
+007. Mesopotamian Invasion|GEN 14:1-12
+008. Battle in the Siddim Valley|GEN 14:2-11
+009. Sack of Sodom|GEN 14:11-12
+012. Abram's Journey to Salem|GEN 14:17
+013. Abram meets Melchizedek|GEN 14:18-20
+015. GEN 16 Hagar|GEN 16:6-14
+016. GEN 18 Angels to Sodom|GEN 18:16-19:1
+017. GEN 19 Lot to Zoar|GEN 19:15-30
+018. GEN 20 Hebron to Gerar|GEN 20:1-18
+019. GEN 22 Gerar to Moriah|GEN 22:1-4
+020. GEN 22 Land of Moriah|GEN 22:2-14
+021. GEN 22 Moriah to Beersheba|GEN 22:19
+023. Beersheba to Haran|GEN 24:1-10
+024. From Beersheba to Isaac|GEN 24:61-67
+025. Isaac to Gerar|GEN 26:1-6
+026. Isaac to Beersheba|GEN 26:23-33
+027. Jacob to Bethel|GEN 28:10-22
+028. Haran to Gilead|GEN 31:17-25
+029. Mizpah to Bethel|GEN 35:1-7
+031. Joseph to Dothan|GEN 37:12-17
+033. Judah to Timnah|GEN 38:12-14
+034. Joseph's brothers to Egypt|GEN 42:1-5
+035. Jacob to Goshen|GEN 46:1-7; GEN 46:28
+036. Jacob to Pharaoh|GEN 47:1-10
+037. Burial of Jacob|GEN 50:1-14
+039. Moses to Midian|EXO 2:15-22
+040. Moses to Horeb|EXO 3:1-2
+041. Aaron to Horeb|EXO 4:27-28
+042. Exodus Route1|EXO 12:37-13:22; NUM 33:3-8
+043. Exodus Route2|EXO 14:1-15:22
+044. Spies|NUM 13:17-26
+046. 38 years wandering|NUM 14:33-34; DEU 2:1-14
+047. Transjordan|NUM 21:4-20
+048. Sihon and Og battle|NUM 21:21-35
+049. Balaam's Journey|NUM 22:2-41
+050. Balaam's prophecies|NUM 23:1-24:25
+053. Spies to Jericho|JOS 2:1-24
+054. Crossing the Jordan|JOS 3:1-4:24
+055. Capture of Jericho|JOS 6:1-27
+056. Conquest of Ai|JOS 7:1-8:29
+057. Blessings and Curses|JOS 8:30-35
+059. Deception of The Gibeonites|JOS 9:1-27
+060. Israelitas go the Gibeonites|JOS 9:17
+061. Battle against Gibeon|JOS 10:1-15
+062. Southern campaign|JOS 10:16-43
+063. King of Hazor|JOS 11:1-5
+064. Nothern Campaign|JOS 11:6-23
+066. Judah's Conquest|JDG 1:1-20
+067. Ehud's battle|JDG 3:12-30
+068. Deborah|JDG 4:1-5:31
+069. Gideon|JDG 6:1-8:35
+070. Abimelech|JDG 9:1-57
+071. Jephthah|JDG 10:6-12:7
+072. Samson|JDG 13:1-16:31
+073. Dan Migration|JDG 18:1-31
+074. Benjamites|JDG 19:1-21:25
+075. Ruth|RUT 1:1-4:22
+076. Hannah|1SA 1:1-2:11
+077. Battle at Aphek|1SA 4:1-22
+078. Ark Journeys|1SA 5:1-7:2
+079. Mizpah battle|1SA 7:3-14
+080. Samuel's Circuit|1SA 7:15-17
+081. Saul's donkey|1SA 9:1-10:16
+082. Jabesh battle|1SA 11:1-15
+083. Michmash battle_1|1SA 13:1-14:46
+084. Michmash battle_2|1SA 13:1-14:46
+085. David and Goliath|1SA 17:1-58
+086. David's wanderings_1|1SA 19:1-22:5
+087. David's wanderings_2|1SA 23:1-29
+088. David's wanderings_3|1SA 24:1-25:1
+089. David's wandering_4|1SA 27:1-30:31
+100. Solomon's Temple_1|1KI 5:1-18
+100|1KI 5:1-18
+101. Solomon's Temple_2|1KI 5:8-9; 2CH 2:3-16
+102. Solomon's Kingdom|1KI 4:1-34
+103. Ophir|1KI 9:26-28; 1KI 10:11
+104. Queen of Sheba|1KI 10:1-13
+105. Solomon's enemies|1KI 11:14-40
+106. Jeroboam anointed|1KI 11:29-39
+107a. Rehoboam to Shechem|1KI 12:1-20
+107b. Rehoboam to Shechem|1KI 12:1-20
+108. Jeroboams wife|1KI 14:1-18
+110. Shishak|1KI 14:25-26; 2CH 12:2-9
+111. Baasha invasion|1KI 15:16-22
+112.Zerah the Ethiopian|2CH 14:9-15
+114. Ministry of Elijah|1KI 17:1-24
+115. Elijah on Mount Carmel|1KI 18:1-46
+116. Elijah to Sinai|1KI 19:1-18
+117. Elijah and Elisha|1KI 19:19-21
+118. Siege of Samaria|1KI 20:1-21
+119. Naboth's vineyard|1KI 21:1-29
+120. Wars with Syria|1KI 20:22-43
+121. Ministry of Elijah (contd.)|2KI 1:1-2:8
+122. Ministry of Elisha|2KI 2:9-25
+123. Moabite Incursion|2KI 3:1-27
+124. Moabite Rebellion|2KI 3:1-27
+125. Moab's Revolt|2KI 3:1-27
+127. Naaman|2KI 5:1-27
+128. Ministry of Elisha_cont|2KI 8:7-15
+130. Elisha and Hazael|2KI 8:7-15
+131. Wars with Edom and Syria|2KI 8:20-29
+132. Jehu|2KI 9:1-10:36
+133. War with Hazael|2KI 10:32-33
+134. Jehoash to Elisha|2KI 13:14-25
+135. Amaziah|2KI 14:1-22; 2CH 25:1-28
+136. Uzziah|2CH 26:1-15
+137. Jeroboam|2KI 14:23-29
+138. Tiglath Pileser|2KI 15:29
+139. Rezin and Pekah|2KI 16:5-9; 2CH 28:5-8
+140. Fall of Samaria|2KI 17:1-6
+141. Deportation to Assyria|2KI 17:6; 2KI 17:24
+142. Sargon|ISA 20:1
+143. Hezekiah|2KI 18:1-20:21
+144. Sennacherib|2KI 18:13-19:37
+145. Sennacheribs defeat|2KI 19:35-37
+146. Babylon to Jerusalem|2KI 20:12-19
+147. Josiah|2KI 22:1-23:30
+148. Neco|2KI 23:29-35
+149. Jehoiakim|2KI 24:1-7
+150. Nebuchadnezzar|2KI 24:10-25:21
+151. Babylonian Exile|2KI 25:11; 2KI 25:21; JER 52:27-30
+151. Gedaliah|2KI 25:22-26; JER 40:1-41:18
+152. Nazareth to Hebron|LUK 1:39-56
+153. Going to Egypt|MAT 2:13-15
+153. Nazareth to Bethlehem|LUK 2:1-7
+154. Royal Road|MAT 2:1-12
+155. Jonah|JON 1:1-4:11
+155a. Bethlehem to Egypt|MAT 2:13-15
+155b. Bethlehem-Egypt-Nazareth|MAT 2:13-23
+158. Bethabara and Aenon|JHN 1:28; JHN 3:23
+160. Herod imprisons John the baptist|MAT 14:3-12; LUK 3:19-20
+161. First miracle in Cana|JHN 2:1-11
+162. Jesus to Samaria|JHN 4:3-42
+163. Samaria to Nazareth|JHN 4:43-45; LUK 4:14-30
+164. Second miracle in Cana|JHN 4:46-54
+165. Nazareth to Capernaum|MAT 4:13-16; LUK 4:31
+166. Fishermen disciples|MAT 4:18-22; MRK 1:16-20
+168. Preaching in the synagogues of Galilee|MAT 4:23; MRK 1:39
+169. Capernaum to Jerusalem|JHN 5:1
+170. Nain|LUK 7:11-17
+170a. Tyre_Sidon|MAT 15:21-28; MRK 7:24-31
+170b. Storm|MRK 4:35-41; MAT 8:23-27
+172. Transfiguration|MAT 17:1-8; MRK 9:2-8; LUK 9:28-36
+174. Capernaum to Jerusalem|JHN 7:10; LUK 9:51-56
+176. Dedication|JHN 10:22-39
+177. Raising Lazarus|JHN 11:1-44
+178. Ephraim|JHN 11:54
+179. Last Journey to Jerusalem|LUK 17:11; LUK 18:31-19:28
+192. Road to Emmaus|LUK 24:13-35
+193. Ascension in Bethany|LUK 24:50-53; ACT 1:9-12
+197. Philip in Samaria|ACT 8:4-25
+198. Philip and the Ethiopian Eunuch|ACT 8:26-40
+199. Saul on the Road to Damascus|ACT 9:1-19
+199a. Paul to Arabia and back to Damascus.|GAL 1:17; ACT 9:19-25
+199b. Paul to Jerusalem and Caesarea|ACT 9:26-30
+199b. Paul to Tarsus|ACT 9:30
+200. Paul’s journey from Tarsus to Antioch|ACT 9:30; ACT 11:25-26
+201. Peter in the Coastal Plain|ACT 9:32-43; ACT 10:1-48
+202. First Missionary Journey|ACT 13:1-14:28
+202a. Journey from Antioch to Jerusalem|ACT 15:1-4
+203. Second Missionary Journey|ACT 15:36-18:22
+204. Third Missionary Journey|ACT 18:23-21:17
+205. Paul's Voyage to Rome|ACT 21:15-17; ACT 27:1-28:16
