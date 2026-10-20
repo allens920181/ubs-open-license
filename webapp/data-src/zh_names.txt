@@ -1,0 +1,179 @@
+001. Abram's Journey to Haran|亞伯蘭前往哈蘭
+002. Abram's Journey to Damascus|亞伯蘭前往大馬士革
+003. Abram's Journey to Shechem|亞伯蘭前往示劍
+004. Abram's Journey from the Negev to Egypt|亞伯蘭從尼革夫前往埃及
+005. Abram's Journey to Egypt|亞伯蘭前往埃及
+007. Mesopotamian Invasion|美索不達米亞諸王入侵
+008. Battle in the Siddim Valley|西訂谷之戰
+009. Sack of Sodom|所多瑪被掠
+012. Abram's Journey to Salem|亞伯蘭前往撒冷
+013. Abram meets Melchizedek|亞伯蘭遇見麥基洗德
+015. GEN 16 Hagar|夏甲出走(創16)
+016. GEN 18 Angels to Sodom|天使前往所多瑪(創18)
+017. GEN 19 Lot to Zoar|羅得逃往瑣珥(創19)
+018. GEN 20 Hebron to Gerar|從希伯崙到基拉耳(創20)
+019. GEN 22 Gerar to Moriah|從基拉耳到摩利亞(創22)
+020. GEN 22 Land of Moriah|摩利亞地(創22)
+021. GEN 22 Moriah to Beersheba|從摩利亞回別是巴(創22)
+023. Beersheba to Haran|從別是巴到哈蘭
+024. From Beersheba to Isaac|從別是巴到以撒處
+025. Isaac to Gerar|以撒前往基拉耳
+026. Isaac to Beersheba|以撒前往別是巴
+027. Jacob to Bethel|雅各前往伯特利
+028. Haran to Gilead|從哈蘭到基列
+029. Mizpah to Bethel|從米斯巴到伯特利
+031. Joseph to Dothan|約瑟前往多坍
+033. Judah to Timnah|猶大前往亭拿
+034. Joseph's brothers to Egypt|約瑟的哥哥們前往埃及
+035. Jacob to Goshen|雅各前往歌珊
+036. Jacob to Pharaoh|雅各去見法老
+037. Burial of Jacob|雅各的安葬
+039. Moses to Midian|摩西前往米甸
+040. Moses to Horeb|摩西前往何烈山
+041. Aaron to Horeb|亞倫前往何烈山
+042. Exodus Route1|出埃及路線一
+043. Exodus Route2|出埃及路線二
+044. Spies|探子窺探迦南
+046. 38 years wandering|曠野漂流三十八年
+047. Transjordan|約旦河東
+048. Sihon and Og battle|擊敗西宏與噩之戰
+049. Balaam's Journey|巴蘭的旅程
+050. Balaam's prophecies|巴蘭的預言
+053. Spies to Jericho|探子前往耶利哥
+054. Crossing the Jordan|渡過約旦河
+055. Capture of Jericho|攻取耶利哥
+056. Conquest of Ai|攻取艾城
+057. Blessings and Curses|祝福與咒詛
+059. Deception of The Gibeonites|基遍人的詭計
+060. Israelitas go the Gibeonites|以色列人前往基遍人處
+061. Battle against Gibeon|基遍之戰
+062. Southern campaign|南方戰役
+063. King of Hazor|夏瑣王
+064. Nothern Campaign|北方戰役
+066. Judah's Conquest|猶大支派的征戰
+067. Ehud's battle|以笏之戰
+068. Deborah|底波拉
+069. Gideon|基甸
+070. Abimelech|亞比米勒
+071. Jephthah|耶弗他
+072. Samson|參孫
+073. Dan Migration|但支派遷移
+074. Benjamites|便雅憫人
+075. Ruth|路得
+076. Hannah|哈拿
+077. Battle at Aphek|亞弗之戰
+078. Ark Journeys|約櫃的行程
+079. Mizpah battle|米斯巴之戰
+080. Samuel's Circuit|撒母耳巡迴
+081. Saul's donkey|掃羅尋驢
+082. Jabesh battle|雅比之戰
+083. Michmash battle_1|密抹之戰(一)
+084. Michmash battle_2|密抹之戰(二)
+085. David and Goliath|大衛與歌利亞
+086. David's wanderings_1|大衛的流亡(一)
+087. David's wanderings_2|大衛的流亡(二)
+088. David's wanderings_3|大衛的流亡(三)
+089. David's wandering_4|大衛的流亡(四)
+090. David's Kingdom_1|大衛的王國(一)
+091. David's Kingdom_2|大衛的王國(二)
+092. David's Kingdom_3|大衛的王國(三)
+093. David|大衛(一)
+094. David|大衛(二)
+095. David's Kingdom_6|大衛的王國(六)
+096. David's Kingdom_7|大衛的王國(七)
+097. David's Kingdom_8|大衛的王國(八)
+099. Solomon's Jerusalem|所羅門的耶路撒冷
+100. Solomon's Temple_1|所羅門的聖殿(一)
+100|所羅門的聖殿(附圖)
+101. Solomon's Temple_2|所羅門的聖殿(二)
+102. Solomon's Kingdom|所羅門的王國
+103. Ophir|俄斐
+104. Queen of Sheba|示巴女王
+105. Solomon's enemies|所羅門的敵人
+106. Jeroboam anointed|耶羅波安受膏
+107a. Rehoboam to Shechem|羅波安前往示劍(一)
+107b. Rehoboam to Shechem|羅波安前往示劍(二)
+108. Jeroboams wife|耶羅波安的妻子
+110. Shishak|示撒入侵
+111. Baasha invasion|巴沙入侵
+112.Zerah the Ethiopian|古實人謝拉
+114. Ministry of Elijah|以利亞的事工
+115. Elijah on Mount Carmel|以利亞在迦密山
+116. Elijah to Sinai|以利亞前往西奈
+117. Elijah and Elisha|以利亞與以利沙
+118. Siege of Samaria|撒瑪利亞被圍
+119. Naboth's vineyard|拿伯的葡萄園
+120. Wars with Syria|與亞蘭的戰爭
+121. Ministry of Elijah (contd.)|以利亞的事工(續)
+122. Ministry of Elisha|以利沙的事工
+123. Moabite Incursion|摩押人入侵
+124. Moabite Rebellion|摩押叛變
+125. Moab's Revolt|摩押的反叛
+126. Ministry of Elisha_cont|以利沙的事工(續一)
+127. Naaman|乃縵
+128. Ministry of Elisha_cont|以利沙的事工(續二)
+129. Benhadad|便哈達
+130. Elisha and Hazael|以利沙與哈薛
+131. Wars with Edom and Syria|與以東和亞蘭的戰爭
+132. Jehu|耶戶
+133. War with Hazael|與哈薛的戰爭
+134. Jehoash to Elisha|約阿施探望以利沙
+135. Amaziah|亞瑪謝
+136. Uzziah|烏西雅
+137. Jeroboam|耶羅波安二世
+138. Tiglath Pileser|提革拉毗尼色
+139. Rezin and Pekah|利汛與比加
+140. Fall of Samaria|撒瑪利亞淪陷
+141. Deportation to Assyria|被擄到亞述
+142. Sargon|撒珥根
+143. Hezekiah|希西家
+144. Sennacherib|西拿基立
+145. Sennacheribs defeat|西拿基立的失敗
+146. Babylon to Jerusalem|從巴比倫到耶路撒冷
+147. Josiah|約西亞
+148. Neco|尼哥
+149. Jehoiakim|約雅敬
+150. Nebuchadnezzar|尼布甲尼撒
+151. Babylonian Exile|被擄到巴比倫
+151. Gedaliah|基大利
+152. Nazareth to Hebron|從拿撒勒到希伯崙
+153. Going to Egypt|前往埃及
+153. Nazareth to Bethlehem|從拿撒勒到伯利恆
+154. Royal Road|御道
+155. Jonah|約拿
+155a. Bethlehem to Egypt|從伯利恆到埃及
+155b. Bethlehem-Egypt-Nazareth|伯利恆、埃及、拿撒勒
+158. Bethabara and Aenon|伯大巴拉與哀嫩
+160. Herod imprisons John the baptist|希律囚禁施洗約翰
+161. First miracle in Cana|迦拿的第一個神蹟
+162. Jesus to Samaria|耶穌前往撒瑪利亞
+163. Samaria to Nazareth|從撒瑪利亞到拿撒勒
+164. Second miracle in Cana|迦拿的第二個神蹟
+165. Nazareth to Capernaum|從拿撒勒到迦百農
+166. Fishermen disciples|呼召漁夫門徒
+168. Preaching in the synagogues of Galilee|在加利利各會堂傳道
+169. Capernaum to Jerusalem|從迦百農到耶路撒冷(一)
+170. Nain|拿因城
+170a. Tyre_Sidon|推羅與西頓
+170b. Storm|風浪
+172. Transfiguration|登山變像
+174. Capernaum to Jerusalem|從迦百農到耶路撒冷(二)
+176. Dedication|修殿節
+177. Raising Lazarus|使拉撒路復活
+178. Ephraim|以法蓮
+179. Last Journey to Jerusalem|最後一次前往耶路撒冷
+192. Road to Emmaus|以馬忤斯路上
+193. Ascension in Bethany|在伯大尼升天
+197. Philip in Samaria|腓利在撒瑪利亞
+198. Philip and the Ethiopian Eunuch|腓利與埃提阿伯太監
+199. Saul on the Road to Damascus|掃羅在往大馬士革的路上
+199a. Paul to Arabia and back to Damascus.|保羅前往阿拉伯並回到大馬士革
+199b. Paul to Jerusalem and Caesarea|保羅前往耶路撒冷和凱撒利亞
+199b. Paul to Tarsus|保羅前往大數
+200. Paul’s journey from Tarsus to Antioch|保羅從大數到安提阿
+201. Peter in the Coastal Plain|彼得在沿海平原
+202. First Missionary Journey|第一次宣教旅程
+202a. Journey from Antioch to Jerusalem|從安提阿到耶路撒冷
+203. Second Missionary Journey|第二次宣教旅程
+204. Third Missionary Journey|第三次宣教旅程
+205. Paul's Voyage to Rome|保羅航向羅馬
