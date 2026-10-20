@@ -8,3 +8,16 @@
 203. Second Missionary Journey|0r,2r,1r,3,6r,4,7,5
 204. Third Missionary Journey|5,6,1r,2,0r,0,2r,1,3,4r
 205. Paul's Voyage to Rome|1,2,3,0r
+# 以下由端點距離自動串接,再依經文決定整條路線的方向
+018. GEN 20 Hebron to Gerar|0,1r,2
+044. Spies|0r,1r
+048. Sihon and Og battle|1r,0
+064. Nothern Campaign|5,1,0,4,3,2
+085. David and Goliath|3,4r,0,2,1
+086. David's wanderings_1|2,1,0r
+100. Solomon's Temple_1|2,1r,0r
+100|2,1r,0r
+101. Solomon's Temple_2|1,0r
+128. Ministry of Elisha_cont|1r,0r
+142. Sargon|5r,4,3,1,2r,0r
+153. Going to Egypt|1,0

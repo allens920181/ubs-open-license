@@ -147,24 +147,42 @@ function stopPlay(reset) {
 }
 
 function startPlay() {
-  const pts = current.lines.flat();
-  const cum = [0];
-  for (let i = 1; i < pts.length; i++) cum.push(cum[i - 1] + map.distance(pts[i - 1], pts[i]));
-  const total = cum[cum.length - 1] || 1;
+  // Each segment is one leg. A gap bigger than ~0.3 degrees between legs is not drawn:
+  // the runner jumps to the next leg instead of cutting across the map.
+  const legs = current.lines;
+  const lens = legs.map(pts => pts.slice(1).reduce((a, p, k) => a + map.distance(pts[k], p), 0));
+  const total = lens.reduce((a, b) => a + b, 0) || 1;
   const duration = Math.min(20000, Math.max(6000, total / 100)); // ~100 m per ms, clamped
   const trail = L.polyline([], { color: "#ffd400", weight: 6, opacity: 0.9 }).addTo(map);
-  const runner = L.marker(pts[0], { interactive: false, icon: L.divIcon({ className: "", iconSize: [16, 16], html: '<div class="runner"></div>' }) }).addTo(map);
+  const runner = L.marker(legs[0][0], { interactive: false, icon: L.divIcon({ className: "", iconSize: [16, 16], html: '<div class="runner"></div>' }) }).addTo(map);
   const t0 = performance.now();
   anim = { trail, runner };
   playBtn.textContent = "■ 停止";
   const step = now => {
-    const d = Math.min(1, (now - t0) / duration) * total;
-    let i = cum.findIndex(c => c >= d); if (i < 1) i = 1;
-    const f = (d - cum[i - 1]) / ((cum[i] - cum[i - 1]) || 1);
-    const p = [pts[i - 1][0] + (pts[i][0] - pts[i - 1][0]) * f, pts[i - 1][1] + (pts[i][1] - pts[i - 1][1]) * f];
-    trail.setLatLngs([...pts.slice(0, i), p]);
+    let d = Math.min(1, (now - t0) / duration) * total;
+    const done = [];
+    let p = legs[0][0];
+    for (let li = 0; li < legs.length; li++) {
+      const pts = legs[li];
+      if (d >= lens[li] && li < legs.length - 1) { done.push(pts); d -= lens[li]; continue; }
+      const part = [pts[0]];
+      let acc = 0, pos = pts[0];
+      for (let k = 1; k < pts.length; k++) {
+        const seg = map.distance(pts[k - 1], pts[k]);
+        if (acc + seg >= d) {
+          const f = (d - acc) / (seg || 1);
+          pos = [pts[k - 1][0] + (pts[k][0] - pts[k - 1][0]) * f, pts[k - 1][1] + (pts[k][1] - pts[k - 1][1]) * f];
+          part.push(pos);
+          break;
+        }
+        acc += seg; part.push(pts[k]); pos = pts[k];
+      }
+      done.push(part); p = pos;
+      break;
+    }
+    trail.setLatLngs(done);
     runner.setLatLng(p);
-    if (d < total) anim.raf = requestAnimationFrame(step);
+    if (now - t0 < duration) anim.raf = requestAnimationFrame(step);
     else playBtn.textContent = "▶ 重播";
   };
   anim.raf = requestAnimationFrame(step);
