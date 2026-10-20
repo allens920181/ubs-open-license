@@ -7,6 +7,7 @@ import NaturePage from "./pages/NaturePage";
 import Passage from "./pages/Passage";
 import People from "./pages/People";
 import Sermon from "./pages/Sermon";
+import Stories from "./pages/Stories";
 
 function Nav() {
   const n = currentSermon(useSermons()).items.length;
@@ -18,6 +19,7 @@ function Nav() {
         <NavLink to="/images">圖片庫</NavLink>
         <NavLink to="/nature">動植物與器物</NavLink>
         <NavLink to="/people">人物</NavLink>
+        <NavLink to="/stories">故事圖</NavLink>
         <NavLink to="/sermon">講道清單{n > 0 && <span className="count">{n}</span>}</NavLink>
       </nav>
     </header>
@@ -39,6 +41,8 @@ export default function App() {
           <Route path="/nature/:kind/:key" element={<NaturePage />} />
           <Route path="/people" element={<People />} />
           <Route path="/people/:id" element={<People />} />
+          <Route path="/stories" element={<Stories />} />
+          <Route path="/stories/:id" element={<Stories />} />
           <Route path="/sermon" element={<Sermon />} />
           <Route path="*" element={<Home />} />
         </Routes>

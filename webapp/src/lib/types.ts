@@ -104,3 +104,13 @@ export interface Person {
   /** Your own pictures in public/people/own. */
   own: string[];
 }
+
+export interface Story {
+  id: string;
+  name: string;
+  /** Reference as the site writes it (simplified Chinese). */
+  ref: string;
+  refs: Span[];
+  licence: string;
+  slides: { n: number; caption: string }[];
+}

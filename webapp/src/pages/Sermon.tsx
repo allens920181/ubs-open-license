@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { useImages, useNature, usePeople, usePlaces, useRoutes } from "../lib/data";
+import { useImages, useNature, usePeople, usePlaces, useRoutes, useStories } from "../lib/data";
+import { slideUrl } from "../lib/stories";
 import { artUrl, localUrl, personThumb } from "../lib/people";
 import { imageTitle, imageUrl } from "../lib/images";
 import { parseRef } from "../lib/refs";
@@ -82,10 +83,11 @@ export default function Sermon() {
   );
 }
 
-const TYPE_LABEL = { image: "圖片", route: "路線", nature: "動植物器物", passage: "經文", place: "地名", person: "人物", artwork: "人物圖" } as const;
+const TYPE_LABEL = { image: "圖片", route: "路線", nature: "動植物器物", passage: "經文", place: "地名", person: "人物", artwork: "人物圖", slide: "故事圖" } as const;
 
 /** Picture for a person or artwork item, resolved from people.json. */
 function itemThumb(it: SermonItem, people: Map<string, Person>): string | null {
+  if (it.type === "slide") { const [sid, n] = it.ref.split(":"); return slideUrl(sid, +n); }
   if (it.type === "person") { const p = people.get(it.ref); return p ? personThumb(p) : null; }
   if (it.type === "artwork") {
     const [pid, file] = it.ref.split("|");
@@ -103,6 +105,7 @@ function Thumb({ item, image, thumb }: { item: SermonItem; image?: { col: string
 
 function ItemLink({ item }: { item: SermonItem }) {
   if (item.type === "route") return <Link className="small" to={`/map?r=${encodeURIComponent(item.ref)}`}>在地圖中開啟</Link>;
+  if (item.type === "slide") return <Link className="small" to={`/stories/${item.ref.split(":")[0]}`}>開啟故事</Link>;
   if (item.type === "person") return <Link className="small" to={`/people/${item.ref}`}>開啟人物</Link>;
   if (item.type === "artwork") return <Link className="small" to={`/people/${item.ref.split("|")[0]}`}>開啟人物</Link>;
   if (item.type === "place") return <Link className="small" to={`/map?p=${encodeURIComponent(item.ref)}`}>在地圖中開啟</Link>;
@@ -119,6 +122,7 @@ function Present({ items, start, onClose }: { items: SermonItem[]; start: number
   const routes = useRoutes();
   const places = usePlaces();
   const people = usePeople();
+  const stories = useStories();
   const kind = it?.type === "nature" ? (it.ref.split(":")[0] as NatureKind) : null;
   const nature = useNature(kind);
   useEffect(() => {
@@ -141,6 +145,11 @@ function Present({ items, start, onClose }: { items: SermonItem[]; start: number
   const artFile = it?.type === "artwork" ? it.ref.split("|")[1] : undefined;
   const art = person ? (artFile ? person.art.find((a) => a.file === artFile) : person.art[0]) : undefined;
   const personSrc = person ? (art ? artUrl(art, 1600) : person.chibi[0] ? localUrl(person.chibi[0]) : person.own[0] ? localUrl(person.own[0]) : null) : null;
+  const slide = it?.type === "slide" ? (() => {
+    const [sid, n] = it.ref.split(":");
+    const st = stories.data?.find((x) => x.id === sid);
+    return st ? { src: slideUrl(sid, +n), caption: st.slides.find((x) => x.n === +n)?.caption ?? "", name: st.name } : null;
+  })() : null;
   const place = it?.type === "place" ? places.data?.find((x) => x.id === it.ref) : undefined;
   const placeList = useMemo(() => (place ? [place] : []), [place]);
   if (!it) return null;
@@ -157,12 +166,14 @@ function Present({ items, start, onClose }: { items: SermonItem[]; start: number
       <div className="present-body">
         {image && <img key={image.id} src={imageUrl(image, 1600)} alt={imageTitle(image)} />}
         {route && <RouteMap routes={picked} groups={groups} focusId={route.id} places={places.data} nearby={places.data} />}
+        {slide && <img key={slide.src} src={slide.src} alt={slide.name} />}
         {person && personSrc && <img key={personSrc} src={personSrc} alt={person.zh} />}
         {place && <RouteMap routes={[]} groups={groups} places={placeList} focusPlaceId={place.id} />}
         {entry && kind && <div className="present-scroll"><NatureDetail kind={kind} entry={entry} images={images.data} /></div>}
         {it.type === "passage" && <div className="present-text">{it.title}</div>}
-        {!image && !route && !place && !entry && !personSrc && it.type !== "passage" && <p className="muted">{it.type === "person" || it.type === "artwork" ? (people.data ? "這個人物還沒有圖片。" : "載入中…") : "載入中…"}</p>}
+        {!image && !route && !place && !entry && !personSrc && !slide && it.type !== "passage" && <p className="muted">{it.type === "person" || it.type === "artwork" ? (people.data ? "這個人物還沒有圖片。" : "載入中…") : "載入中…"}</p>}
       </div>
+      {slide?.caption && !it.note && <div className="present-note slide-note">{slide.caption}</div>}
       {it.note && <div className="present-note">{it.note}</div>}
       {art && <div className="present-credit">{person?.zh}:{art.title} · {[art.artist, art.date, art.license].filter(Boolean).join(" · ")}</div>}
       {image && <div className="present-credit">{imageTitle(image)} · {image.cp}</div>}

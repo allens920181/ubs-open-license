@@ -193,3 +193,7 @@ textarea.input { width: 100%; resize: vertical; }
 .people-grid .img-card img { aspect-ratio: 3 / 4; object-position: top; }
 .ph-art { aspect-ratio: 3 / 4; display: grid; place-items: center; font-size: 3rem; background: var(--accent-soft); color: var(--accent); }
 code { background: var(--accent-soft); padding: 0 5px; border-radius: 4px; }
+
+.slide-caption { font-size: 1.15rem; margin: 0; line-height: 1.5; }
+
+.slide-note { font-size: 1.8rem; line-height: 1.6; max-height: 28vh; overflow: auto; }

@@ -1,10 +1,10 @@
 import { useSyncExternalStore } from "react";
 
-export type ItemType = "image" | "route" | "nature" | "passage" | "place" | "person" | "artwork";
+export type ItemType = "image" | "route" | "nature" | "passage" | "place" | "person" | "artwork" | "slide";
 export interface SermonItem {
   uid: string;
   type: ItemType;
-  /** image id, route id, place id, person id, "personId|file" (artwork), "flora:2.8", or a passage param. */
+  /** image id, route id, place id, person id, "personId|file" (artwork), "storyId:slideNumber" (slide), "flora:2.8", or a passage param. */
   ref: string;
   title: string;
   note: string;
