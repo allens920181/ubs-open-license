@@ -18,8 +18,16 @@
   #head { padding:12px; border-bottom:1px solid var(--line); }
   #head h1 { font-size:16px; margin:0 0 8px; }
   #q { width:100%; padding:6px 8px; border:1px solid var(--line); border-radius:4px; background:var(--bg); color:var(--fg); }
-  #tools { margin-top:8px; display:flex; gap:12px; align-items:center; color:var(--muted); }
+  #tools { margin-top:8px; display:flex; flex-wrap:wrap; gap:6px 12px; align-items:center; color:var(--muted); }
+  #tools label, #tools button { white-space:nowrap; }
   #tools button { border:1px solid var(--line); background:var(--bg); color:var(--fg); border-radius:4px; padding:3px 8px; cursor:pointer; }
+  #play { margin-top:8px; display:flex; gap:8px; align-items:center; color:var(--muted); }
+  #play button { border:1px solid var(--line); background:var(--bg); color:var(--fg); border-radius:4px; padding:3px 10px; cursor:pointer; }
+  #play button:disabled { opacity:.5; cursor:default; }
+  #playname { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .badge { width:20px; height:20px; border-radius:50%; background:#fff; border:2px solid; color:#222;
+    font:700 11px/16px system-ui; text-align:center; }
+  .runner { width:16px; height:16px; border-radius:50%; background:#ffd400; border:3px solid #222; }
   #list { flex:1; overflow:auto; }
   .grp { position:sticky; top:0; background:var(--bg); padding:6px 12px; font-weight:600;
     border-bottom:1px solid var(--line); color:var(--accent); }
@@ -45,8 +53,14 @@
       <input id="q" type="search" placeholder="搜尋路線(中文、英文或編號)">
       <div id="tools">
         <label><input id="all" type="checkbox"> 顯示全部</label>
+        <label><input id="arrows" type="checkbox" checked> 箭頭</label>
+        <label><input id="nums" type="checkbox" checked> 編號</label>
         <button id="clear">清除</button>
         <span id="count"></span>
+      </div>
+      <div id="play">
+        <button id="playbtn" disabled>▶ 播放</button>
+        <span id="playname">先點選一條路線</span>
       </div>
     </div>
     <div id="list"></div>
@@ -59,6 +73,7 @@
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/leaflet-polylinedecorator@1.6.0/dist/leaflet.polylineDecorator.js"></script>
 <script src="routes.js"></script>
 <script>
 const map = L.map("map").setView([32, 36], 6);
@@ -81,6 +96,20 @@ function layerFor(r) {
     r.lines.forEach(pts => {
       L.polyline(pts, { color, weight: 4, opacity: 0.85 }).bindTooltip(`${r.num}. ${r.zh || r.name}`, { sticky: true }).addTo(g);
     });
+    const arrows = [], nums = [];
+    r.lines.forEach((pts, i) => {
+      arrows.push(L.polylineDecorator(L.polyline(pts), { patterns: [{
+        offset: 40, repeat: 90,
+        symbol: L.Symbol.arrowHead({ pixelSize: 11, polygon: false,
+          pathOptions: { color: "#fff", weight: 2.5, opacity: 0.95 } })
+      }] }));
+      if (r.lines.length > 1) {
+        nums.push(L.marker(pts[0], { interactive: false, icon: L.divIcon({
+          className: "", iconSize: [20, 20],
+          html: `<div class="badge" style="border-color:${color}">${i + 1}</div>` }) }));
+      }
+    });
+    g.arrows = arrows; g.nums = nums;
     const first = r.lines[0][0], lastLine = r.lines[r.lines.length - 1];
     const last = lastLine[lastLine.length - 1];
     L.circleMarker(first, { radius: 6, color: "#fff", weight: 2, fillColor: "#2a8f5a", fillOpacity: 1 })
@@ -88,9 +117,60 @@ function layerFor(r) {
     L.circleMarker(last, { radius: 6, color: "#fff", weight: 2, fillColor: "#c0392b", fillOpacity: 1 })
       .bindTooltip("終點").addTo(g);
     layers.set(r.id, g);
+    applyOptions(g);
   }
   return layers.get(r.id);
 }
+
+function applyOptions(g) {
+  const on = (list, show) => list.forEach(l => show ? g.addLayer(l) : g.removeLayer(l));
+  on(g.arrows, document.getElementById("arrows").checked);
+  on(g.nums, document.getElementById("nums").checked);
+}
+["arrows", "nums"].forEach(id =>
+  document.getElementById(id).addEventListener("change", () => layers.forEach(applyOptions)));
+
+// ---- playback: a marker walks the segments in file order ----
+let current = null, anim = null;
+const playBtn = document.getElementById("playbtn");
+
+function setCurrent(r) {
+  stopPlay(true);
+  current = r;
+  playBtn.disabled = !r;
+  document.getElementById("playname").textContent = r ? `${r.num}. ${r.zh || r.name}` : "先點選一條路線";
+}
+
+function stopPlay(reset) {
+  if (anim) { cancelAnimationFrame(anim.raf); map.removeLayer(anim.trail); map.removeLayer(anim.runner); anim = null; }
+  playBtn.textContent = "▶ 播放";
+}
+
+function startPlay() {
+  const pts = current.lines.flat();
+  const cum = [0];
+  for (let i = 1; i < pts.length; i++) cum.push(cum[i - 1] + map.distance(pts[i - 1], pts[i]));
+  const total = cum[cum.length - 1] || 1;
+  const duration = Math.min(20000, Math.max(6000, total / 100)); // ~100 m per ms, clamped
+  const trail = L.polyline([], { color: "#ffd400", weight: 6, opacity: 0.9 }).addTo(map);
+  const runner = L.marker(pts[0], { interactive: false, icon: L.divIcon({ className: "", iconSize: [16, 16], html: '<div class="runner"></div>' }) }).addTo(map);
+  const t0 = performance.now();
+  anim = { trail, runner };
+  playBtn.textContent = "■ 停止";
+  const step = now => {
+    const d = Math.min(1, (now - t0) / duration) * total;
+    let i = cum.findIndex(c => c >= d); if (i < 1) i = 1;
+    const f = (d - cum[i - 1]) / ((cum[i] - cum[i - 1]) || 1);
+    const p = [pts[i - 1][0] + (pts[i][0] - pts[i - 1][0]) * f, pts[i - 1][1] + (pts[i][1] - pts[i - 1][1]) * f];
+    trail.setLatLngs([...pts.slice(0, i), p]);
+    runner.setLatLng(p);
+    if (d < total) anim.raf = requestAnimationFrame(step);
+    else playBtn.textContent = "▶ 重播";
+  };
+  anim.raf = requestAnimationFrame(step);
+}
+
+playBtn.onclick = () => { if (!current) return; if (anim && playBtn.textContent.startsWith("■")) stopPlay(); else { stopPlay(); startPlay(); } };
 
 function boundsOf(rs) {
   return L.latLngBounds(rs.flatMap(r => r.lines.flat()));
@@ -140,11 +220,13 @@ function toggle(r, fit) {
     selected.add(r.id);
     g.addTo(map);
     if (fit) map.fitBounds(boundsOf([r]), { padding: [40, 40] });
+    setCurrent(r);
   }
   rows.get(r.id)?.classList.toggle("on", selected.has(r.id));
 }
 
 function clearAll() {
+  setCurrent(null);
   selected.forEach(id => map.removeLayer(layers.get(id)));
   selected.clear();
   rows.forEach(el => el.classList.remove("on"));
