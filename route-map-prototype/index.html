@@ -26,6 +26,7 @@
   .item { padding:6px 12px; cursor:pointer; border-bottom:1px solid var(--line); display:flex; gap:8px; }
   .item:hover { background:var(--hover); }
   .item.on { background:var(--hover); box-shadow:inset 3px 0 var(--accent); }
+  .item .t small { display:block; color:var(--muted); font-size:12px; }
   .item .n { color:var(--muted); min-width:2.5em; font-variant-numeric:tabular-nums; }
   #foot { padding:8px 12px; font-size:12px; color:var(--muted); border-top:1px solid var(--line); }
   #foot a { color:inherit; }
@@ -41,7 +42,7 @@
   <aside id="side">
     <div id="head">
       <h1>聖經路線地圖</h1>
-      <input id="q" type="search" placeholder="搜尋路線(英文名稱或編號)">
+      <input id="q" type="search" placeholder="搜尋路線(中文、英文或編號)">
       <div id="tools">
         <label><input id="all" type="checkbox"> 顯示全部</label>
         <button id="clear">清除</button>
@@ -78,7 +79,7 @@ function layerFor(r) {
     const g = L.layerGroup();
     const color = colorOf(r);
     r.lines.forEach(pts => {
-      L.polyline(pts, { color, weight: 4, opacity: 0.85 }).bindTooltip(`${r.num}. ${r.name}`, { sticky: true }).addTo(g);
+      L.polyline(pts, { color, weight: 4, opacity: 0.85 }).bindTooltip(`${r.num}. ${r.zh || r.name}`, { sticky: true }).addTo(g);
     });
     const first = r.lines[0][0], lastLine = r.lines[r.lines.length - 1];
     const last = lastLine[lastLine.length - 1];
@@ -104,7 +105,7 @@ function render(filter = "") {
   rows.clear();
   let n = 0;
   groups.forEach(g => {
-    const rs = ROUTES.filter(r => r.group === g && (!f || `${r.num} ${r.name}`.toLowerCase().includes(f)));
+    const rs = ROUTES.filter(r => r.group === g && (!f || `${r.num} ${r.zh} ${r.name}`.toLowerCase().includes(f)));
     if (!rs.length) return;
     const h = document.createElement("div");
     h.className = "grp";
@@ -113,8 +114,14 @@ function render(filter = "") {
     rs.forEach(r => {
       const el = document.createElement("div");
       el.className = "item" + (selected.has(r.id) ? " on" : "");
-      el.innerHTML = `<span class="n">${r.num}</span><span></span>`;
-      el.lastChild.textContent = r.name;
+      el.innerHTML = `<span class="n">${r.num}</span><span class="t"></span>`;
+      const t = el.lastChild;
+      t.append(r.zh || r.name);
+      if (r.zh) {
+        const en = document.createElement("small");
+        en.textContent = r.name;
+        t.appendChild(en);
+      }
       el.onclick = () => toggle(r, true);
       listEl.appendChild(el);
       rows.set(r.id, el);
