@@ -5,6 +5,10 @@ import workerUrl from "maplibre-gl/dist/maplibre-gl-worker.mjs?url";
 import type { Place, Route } from "../lib/types";
 import { placeName } from "../lib/images";
 import { formatSpan, spanToParam, versesToSpans } from "../lib/refs";
+import {
+  BASES, DEFAULT_LABEL_STYLE, LABEL_OVERLAYS, clearLabelPos, getLabelPos, hasLabelPos, labelVars, setLabelPos, useStored,
+  type LabelStyle,
+} from "../lib/mapStyle";
 
 // MapLibre 6 is plain ESM: the bundler has to tell it where its worker file ended up.
 maplibregl.setWorkerUrl(workerUrl);
@@ -95,7 +99,11 @@ export default function RouteMap({ routes, groups, focusId, places = [], focusPl
   const markers = useRef<maplibregl.Marker[]>([]);
   const ready = useRef(false);
   const [, force] = useState(0);
-  const [base, setBase] = useState<"sat" | "osm">("sat");
+  const [prefs, setPrefs] = useStored("sermon-app:map", { base: "sat" });
+  const base = BASES.some((b) => b.id === prefs.base) ? prefs.base : "sat";
+  const [lstyle, setLstyle] = useStored<LabelStyle>("sermon-app:labelstyle", DEFAULT_LABEL_STYLE);
+  const [panel, setPanel] = useState(false);
+  const [dragged, setDragged] = useState(hasLabelPos());
   const [tilt, setTilt] = useState(true);
   const [terrain, setTerrain] = useState(1.5);
   const [labels, setLabels] = useState(true);
@@ -104,10 +112,11 @@ export default function RouteMap({ routes, groups, focusId, places = [], focusPl
   const [showPlaces, setShowPlaces] = useState(true);
   const [passing, setPassing] = useState("");
   const labels_ = useRef<maplibregl.Marker[]>([]);
+  const shownIds = useRef<(Place & { lat: number; lon: number })[]>([]);
   const popup = useRef<maplibregl.Popup | null>(null);
   const anim = useRef<{ raf: number; runner: maplibregl.Marker } | null>(null);
-  const latest = useRef({ routes, groups, tilt, places, showPlaces, nearby });
-  latest.current = { routes, groups, tilt, places, showPlaces, nearby };
+  const latest = useRef({ routes, groups, tilt, places, showPlaces, nearby, base, lstyle });
+  latest.current = { routes, groups, tilt, places, showPlaces, nearby, base, lstyle };
 
   // ---- create the map once ----
   useEffect(() => {
@@ -116,18 +125,17 @@ export default function RouteMap({ routes, groups, focusId, places = [], focusPl
       style: {
         version: 8,
         sources: {
-          osm: { type: "raster", tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"], tileSize: 256, maxzoom: 18, attribution: "© OpenStreetMap contributors" },
-          sat: { type: "raster", tiles: ["https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"], tileSize: 256, maxzoom: 17, attribution: "Imagery © Esri, Maxar, Earthstar Geographics" },
-          lab: { type: "raster", tiles: ["https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}"], tileSize: 256, maxzoom: 14 },
+          ...Object.fromEntries(BASES.map((b) => [`b-${b.id}`, { type: "raster", tiles: b.tiles, tileSize: 256, maxzoom: b.maxzoom, attribution: b.attribution }])),
+          ...Object.fromEntries(Object.entries(LABEL_OVERLAYS).map(([k, v]) => [`l-${k}`, { type: "raster", tiles: v.tiles, tileSize: 256, maxzoom: v.maxzoom }])),
           dem: { type: "raster-dem", tiles: [DEM], tileSize: 256, maxzoom: 14, encoding: "terrarium", attribution: "Terrain: Mapzen / AWS Terrain Tiles" },
           shade: { type: "raster-dem", tiles: [DEM], tileSize: 256, maxzoom: 14, encoding: "terrarium" },
         },
         layers: [
           { id: "bg", type: "background", paint: { "background-color": "#9fb4c7" } },
-          { id: "osm", type: "raster", source: "osm", layout: { visibility: "none" } },
-          { id: "sat", type: "raster", source: "sat" },
-          { id: "hill", type: "hillshade", source: "shade", paint: { "hillshade-exaggeration": 0.35 } },
-          { id: "lab", type: "raster", source: "lab", paint: { "raster-opacity": 0.9 } },
+          ...BASES.map((b) => ({ id: `b-${b.id}`, type: "raster" as const, source: `b-${b.id}`, layout: { visibility: b.id === base ? "visible" as const : "none" as const } })),
+          { id: "hill", type: "hillshade", source: "shade", paint: { "hillshade-exaggeration": BASES.find((b) => b.id === base)!.hill } },
+          ...Object.keys(LABEL_OVERLAYS).map((k) => ({ id: `l-${k}`, type: "raster" as const, source: `l-${k}`, paint: { "raster-opacity": 0.9 },
+            layout: { visibility: BASES.find((b) => b.id === base)!.labels === k ? "visible" as const : "none" as const } })),
         ],
       },
     });
@@ -147,6 +155,9 @@ export default function RouteMap({ routes, groups, focusId, places = [], focusPl
         "icon-size": ["interpolate", ["linear"], ["zoom"], 5, 0.7, 10, 1.1, 13, 1.5], "icon-rotation-alignment": "map", "icon-pitch-alignment": "map" } });
       map.addLayer({ id: "trail-line", type: "line", source: "trail", layout: round, paint: { "line-color": "#ffd400", "line-width": w(5, 8, 13) } });
       map.addSource("places", { type: "geojson", data: EMPTY });
+      map.addSource("leaders", { type: "geojson", data: EMPTY });
+      map.addLayer({ id: "leader-casing", type: "line", source: "leaders", paint: { "line-color": "#000", "line-width": 3.5, "line-opacity": 0.6 } });
+      map.addLayer({ id: "leader-line", type: "line", source: "leaders", paint: { "line-color": "#fff", "line-width": 1.6 } });
       map.addLayer({ id: "place-halo", type: "circle", source: "places", paint: { "circle-radius": ["interpolate", ["linear"], ["zoom"], 5, 6, 10, 10], "circle-color": "#000", "circle-opacity": 0.55 } });
       map.addLayer({ id: "place-dots", type: "circle", source: "places", paint: {
         "circle-radius": ["interpolate", ["linear"], ["zoom"], 5, 3.5, 10, 6.5],
@@ -174,27 +185,63 @@ export default function RouteMap({ routes, groups, focusId, places = [], focusPl
     popup.current = new maplibregl.Popup({ offset: 14, maxWidth: "280px" }).setLngLat([p.lon, p.lat]).setDOMContent(placeCard(p)).addTo(map);
   }
 
-  /** Names next to the dots: all of them when there are few places, otherwise the best-known ones in view once zoomed in. */
+  /** Lines from a place's dot to its name tag, for tags that were dragged away. */
+  function drawLeaders(live?: { id: string; at: [number, number] }) {
+    const map = mapRef.current;
+    const src = map?.getSource("leaders") as maplibregl.GeoJSONSource | undefined;
+    if (!map || !src) return;
+    const features = shownIds.current.flatMap((p) => {
+      const at = live && live.id === p.id ? live.at : getLabelPos(p.id);
+      return at ? [{ type: "Feature" as const, properties: {}, geometry: { type: "LineString" as const, coordinates: [[p.lon, p.lat], at] } }] : [];
+    });
+    src.setData({ type: "FeatureCollection", features });
+  }
+
+  /** Names next to the dots: all of them when there are few places, otherwise the best-known ones in view once zoomed in.
+   *  Each name tag can be dragged; a line then joins it to its dot. Double-click a tag to put it back. */
   function drawLabels() {
     const map = mapRef.current;
     if (!map || !ready.current) return;
     labels_.current.forEach((m) => m.remove());
     labels_.current = [];
+    shownIds.current = [];
     const { places: ps, showPlaces: on } = latest.current;
     const list = ps.filter(hasPos);
-    if (!on || !list.length) return;
+    if (!on || !list.length) { drawLeaders(); return; }
     let pick = list;
     if (list.length > 60) {
-      if (map.getZoom() < 8.2) return;
+      if (map.getZoom() < 8.2) { drawLeaders(); return; }
       const b = map.getBounds();
       pick = list.filter((p) => b.contains([p.lon, p.lat])).sort((a, b2) => b2.refs.length - a.refs.length).slice(0, 70);
     }
+    shownIds.current = pick;
     for (const p of pick) {
       const el_ = document.createElement("div");
       el_.className = "map-label";
       el_.textContent = placeName(p);
-      labels_.current.push(new maplibregl.Marker({ element: el_, anchor: "top", offset: [0, 8] }).setLngLat([p.lon, p.lat]).addTo(map));
+      el_.title = "拖曳可移動名稱,點一下看詳細,連點兩下放回原位";
+      const at = getLabelPos(p.id) ?? [p.lon, p.lat];
+      const m = new maplibregl.Marker({ element: el_, anchor: "top", offset: [0, 8], draggable: true }).setLngLat(at).addTo(map);
+      let moved = false;
+      m.on("dragstart", () => { moved = true; });
+      m.on("drag", () => { const ll_ = m.getLngLat(); drawLeaders({ id: p.id, at: [ll_.lng, ll_.lat] }); });
+      m.on("dragend", () => {
+        const ll_ = m.getLngLat();
+        const a = map.project([p.lon, p.lat]), c = map.project(ll_);
+        if (Math.hypot(a.x - c.x, a.y - c.y) < 14) { m.setLngLat([p.lon, p.lat]); setLabelPos(p.id, null); }
+        else setLabelPos(p.id, [ll_.lng, ll_.lat]);
+        drawLeaders();
+        setDragged(hasLabelPos());
+        setTimeout(() => { moved = false; }, 0);
+      });
+      el_.addEventListener("click", () => { if (!moved) openCard(p); });
+      el_.addEventListener("dblclick", (e) => {
+        e.stopPropagation(); e.preventDefault();
+        setLabelPos(p.id, null); m.setLngLat([p.lon, p.lat]); drawLeaders(); setDragged(hasLabelPos());
+      });
+      labels_.current.push(m);
     }
+    drawLeaders();
   }
 
   // ---- places ----
@@ -256,22 +303,34 @@ export default function RouteMap({ routes, groups, focusId, places = [], focusPl
   }, [routes, groups, ready.current]);
 
   // ---- toolbar effects ----
+  const cur = BASES.find((b) => b.id === base)!;
   useEffect(() => {
     const map = mapRef.current;
     if (!map || !ready.current) return;
-    map.setLayoutProperty("osm", "visibility", base === "osm" ? "visible" : "none");
-    map.setLayoutProperty("sat", "visibility", base === "sat" ? "visible" : "none");
-    map.setPaintProperty("hill", "hillshade-exaggeration", base === "osm" ? 0.45 : 0.35);
-  }, [base, ready.current]);
+    for (const b of BASES) map.setLayoutProperty(`b-${b.id}`, "visibility", b.id === base ? "visible" : "none");
+    map.setLayoutProperty("hill", "visibility", cur.hill > 0 ? "visible" : "none");
+    if (cur.hill > 0) map.setPaintProperty("hill", "hillshade-exaggeration", cur.hill);
+  }, [base, ready.current]); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !ready.current) return;
+    for (const k of Object.keys(LABEL_OVERLAYS)) map.setLayoutProperty(`l-${k}`, "visibility", labels && cur.labels === k ? "visible" : "none");
+  }, [labels, base, ready.current]); // eslint-disable-line react-hooks/exhaustive-deps
+  // name-tag size/background are CSS variables; the dots follow the size
+  useEffect(() => {
+    const el_ = box.current;
+    if (el_) for (const [k, v] of Object.entries(labelVars(lstyle))) el_.style.setProperty(k, v);
+    const map = mapRef.current;
+    if (!map || !ready.current) return;
+    const s = lstyle.size / 13;
+    map.setPaintProperty("place-halo", "circle-radius", ["interpolate", ["linear"], ["zoom"], 5, 6 * s, 10, 10 * s]);
+    map.setPaintProperty("place-dots", "circle-radius", ["interpolate", ["linear"], ["zoom"], 5, 3.5 * s, 10, 6.5 * s]);
+  }, [lstyle, ready.current]);
   useEffect(() => {
     const map = mapRef.current;
     if (!map || !ready.current) return;
     map.setTerrain(terrain > 0 ? { source: "dem", exaggeration: terrain } : null);
   }, [terrain, ready.current]);
-  useEffect(() => {
-    const map = mapRef.current;
-    if (map && ready.current) map.setLayoutProperty("lab", "visibility", labels ? "visible" : "none");
-  }, [labels, ready.current]);
   const firstTilt = useRef(true);
   useEffect(() => {
     if (firstTilt.current) { firstTilt.current = false; return; }
@@ -359,14 +418,27 @@ export default function RouteMap({ routes, groups, focusId, places = [], focusPl
   return (
     <div className="routemap">
       <div ref={box} className="routemap-canvas" />
+      {panel && places.length > 0 && (
+        <div className="label-panel">
+          <label>大小 <input type="range" min={9} max={32} step={1} value={lstyle.size} onChange={(e) => setLstyle({ ...lstyle, size: +e.target.value })} /> {lstyle.size}</label>
+          <label>底色 <input type="color" value={lstyle.bg} onChange={(e) => setLstyle({ ...lstyle, bg: e.target.value, opacity: lstyle.opacity || 0.75 })} /></label>
+          <label>底色濃度 <input type="range" min={0} max={1} step={0.05} value={lstyle.opacity} onChange={(e) => setLstyle({ ...lstyle, opacity: +e.target.value })} /> {Math.round(lstyle.opacity * 100)}%</label>
+          <div className="row">
+            <button className="btn small" onClick={() => setLstyle(DEFAULT_LABEL_STYLE)}>還原樣式</button>
+            <button className="btn small" disabled={!dragged} onClick={() => { clearLabelPos(); setDragged(false); drawLabels(); }}>名稱放回原位</button>
+          </div>
+          <p className="small muted">拖曳地名可移開,會有線連回地點;連點兩下放回。</p>
+        </div>
+      )}
       <div className="map-tools">
-        <select value={base} onChange={(e) => setBase(e.target.value as "sat" | "osm")} aria-label="底圖">
-          <option value="sat">衛星</option><option value="osm">街道</option>
+        <select value={base} onChange={(e) => { setPrefs({ ...prefs, base: e.target.value }); setLabels(true); }} aria-label="底圖類型">
+          {BASES.map((b) => <option key={b.id} value={b.id}>{b.label}</option>)}
         </select>
         <label>地形 <input type="range" min={0} max={5} step={0.5} value={terrain} onChange={(e) => setTerrain(+e.target.value)} /></label>
         <label><input type="checkbox" checked={tilt} onChange={(e) => setTilt(e.target.checked)} /> 傾斜</label>
-        <label><input type="checkbox" checked={labels} onChange={(e) => setLabels(e.target.checked)} /> 底圖地名</label>
+        {cur.labels && <label><input type="checkbox" checked={labels} onChange={(e) => setLabels(e.target.checked)} /> 底圖地名</label>}
         {(places.length > 0) && <label><input type="checkbox" checked={showPlaces} onChange={(e) => setShowPlaces(e.target.checked)} /> 聖經地名</label>}
+        {(places.length > 0) && <button className="btn" onClick={() => setPanel(!panel)}>地名樣式</button>}
         <span className="map-sep" />
         <button className="btn" disabled={!routes.length} onClick={() => (playing ? stop() : play())}>{playing ? "■ 停止" : "▶ 播放"}</button>
         <label><input type="checkbox" checked={follow} onChange={(e) => setFollow(e.target.checked)} /> 鏡頭跟隨</label>

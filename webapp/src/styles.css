@@ -173,7 +173,12 @@ textarea.input { width: 100%; resize: vertical; }
 }
 
 /* places on the map */
-.map-label { color: #fff; font: 600 13px/1.2 system-ui, "Noto Sans TC", sans-serif; text-shadow: 0 0 3px #000, 0 0 3px #000, 0 0 6px #000; white-space: nowrap; pointer-events: none; }
+.map-label { color: var(--lbl-fg, #fff); background: var(--lbl-bg, transparent); font: 600 var(--lbl-size, 13px)/1.25 system-ui, "Noto Sans TC", sans-serif; text-shadow: var(--lbl-shadow, 0 0 3px #000, 0 0 3px #000, 0 0 6px #000); padding: 0 6px; border-radius: 6px; white-space: nowrap; cursor: grab; user-select: none; }
+.map-label:active { cursor: grabbing; }
+.label-panel { position: absolute; left: 10px; bottom: 100px; z-index: 3; display: flex; flex-direction: column; gap: 6px; padding: 10px 12px; width: 250px; background: color-mix(in srgb, var(--panel) 95%, transparent); border-radius: 10px; font-size: .85rem; }
+.label-panel label { display: flex; align-items: center; gap: 8px; }
+.label-panel input[type=range] { flex: 1; }
+.label-panel p { margin: 0; }
 .passing { padding: 1px 10px; border-radius: 999px; background: var(--accent); color: #fff; }
 .place-card { color: #26211c; min-width: 160px; }
 .place-card .muted { color: #6c6258; }
