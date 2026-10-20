@@ -60,9 +60,10 @@
         <span id="count"></span>
       </div>
       <div class="row">
-        <label>底圖 <select id="base"><option value="osm">街道</option><option value="sat">衛星</option></select></label>
-        <label>地形 <input id="exag" type="range" min="1" max="6" step="0.5" value="2"></label>
+        <label>底圖 <select id="base"><option value="sat">衛星</option><option value="osm">街道</option></select></label>
+        <label>地形 <input id="exag" type="range" min="1" max="6" step="0.5" value="1.5"></label>
         <label><input id="tilt" type="checkbox" checked> 傾斜</label>
+        <label><input id="labels" type="checkbox" checked> 地名</label>
       </div>
       <div class="row">
         <button id="playbtn" disabled>▶ 播放</button>
@@ -82,7 +83,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/maplibre-gl/4.7.1/maplibre-gl.min.js"></script>
 <script src="routes.js"></script>
 <script>
-const palette = ["#b4432a", "#2a6fb4", "#2a8f5a", "#8a4fb4", "#c48a1a", "#1a8f9c", "#b42a6f"];
+const palette = ["#ff5a36", "#3da5ff", "#38d27a", "#c47bff", "#ffb82e", "#2fd6e0", "#ff4fa0"];
 const groups = [...new Set(ROUTES.map(r => r.group))];
 const colorOf = r => palette[groups.indexOf(r.group) % palette.length];
 const $ = id => document.getElementById(id);
@@ -90,7 +91,7 @@ const ll = p => [p[1], p[0]];                    // routes.js stores [lat, lon];
 
 const map = new maplibregl.Map({
   container: "map",
-  center: [35.5, 32], zoom: 6.5, pitch: 55, bearing: 0, maxPitch: 80,
+  center: [35.3, 32.0], zoom: 7.4, pitch: 60, bearing: 0, maxPitch: 82, antialias: true,
   style: {
     version: 8,
     sources: {
@@ -98,6 +99,8 @@ const map = new maplibregl.Map({
              attribution: "© OpenStreetMap contributors" },
       sat: { type: "raster", tiles: ["https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"],
              tileSize: 256, maxzoom: 17, attribution: "Imagery © Esri, Maxar, Earthstar Geographics" },
+      lab: { type: "raster", tiles: ["https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}"],
+             tileSize: 256, maxzoom: 14 },
       dem: { type: "raster-dem", tiles: ["https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png"],
              tileSize: 256, maxzoom: 14, encoding: "terrarium",
              attribution: "Terrain: Mapzen / AWS Terrain Tiles" },
@@ -105,9 +108,11 @@ const map = new maplibregl.Map({
                tileSize: 256, maxzoom: 14, encoding: "terrarium" }
     },
     layers: [
-      { id: "osm", type: "raster", source: "osm" },
-      { id: "sat", type: "raster", source: "sat", layout: { visibility: "none" } },
-      { id: "hill", type: "hillshade", source: "shade", paint: { "hillshade-exaggeration": 0.4 } }
+      { id: "bg", type: "background", paint: { "background-color": "#9fb4c7" } },
+      { id: "osm", type: "raster", source: "osm", layout: { visibility: "none" } },
+      { id: "sat", type: "raster", source: "sat", paint: { "raster-saturation": 0.15, "raster-contrast": 0.1 } },
+      { id: "hill", type: "hillshade", source: "shade", paint: { "hillshade-exaggeration": 0.35, "hillshade-shadow-color": "#2b2118", "hillshade-highlight-color": "#fff6e0" } },
+      { id: "lab", type: "raster", source: "lab", paint: { "raster-opacity": 0.9 } }
     ]
   }
 });
@@ -127,18 +132,27 @@ function arrowImage() {
 
 map.on("load", () => {
   map.setTerrain({ source: "dem", exaggeration: +$("exag").value });
+  map.setSky({ "sky-color": "#6ea8e0", "horizon-color": "#d9e8f5", "fog-color": "#e8eef5",
+               "sky-horizon-blend": 0.6, "horizon-fog-blend": 0.7, "fog-ground-blend": 0.2 });
   map.addImage("arrow", arrowImage());
   map.addSource("routes", { type: "geojson", data: empty });
   map.addSource("trail", { type: "geojson", data: empty });
+  const w = (a, b, c) => ["interpolate", ["linear"], ["zoom"], 5, a, 9, b, 13, c];
+  map.addLayer({ id: "route-glow", type: "line", source: "routes",
+    layout: { "line-cap": "round", "line-join": "round" },
+    paint: { "line-color": ["get", "color"], "line-width": w(10, 18, 30), "line-blur": 10, "line-opacity": 0.55 } });
+  map.addLayer({ id: "route-casing", type: "line", source: "routes",
+    layout: { "line-cap": "round", "line-join": "round" },
+    paint: { "line-color": "#111", "line-width": w(6, 9, 14), "line-opacity": 0.85 } });
   map.addLayer({ id: "route-line", type: "line", source: "routes",
     layout: { "line-cap": "round", "line-join": "round" },
-    paint: { "line-color": ["get", "color"], "line-width": 4, "line-opacity": 0.9 } });
+    paint: { "line-color": ["get", "color"], "line-width": w(3.5, 5.5, 9), "line-opacity": 1 } });
   map.addLayer({ id: "route-arrows", type: "symbol", source: "routes",
-    layout: { "symbol-placement": "line", "symbol-spacing": 70, "icon-image": "arrow", "icon-size": 0.8,
+    layout: { "symbol-placement": "line", "symbol-spacing": 70, "icon-image": "arrow", "icon-size": ["interpolate", ["linear"], ["zoom"], 5, 0.7, 10, 1.1, 13, 1.5],
               "icon-allow-overlap": true, "icon-ignore-placement": true, "icon-rotation-alignment": "map",
               "icon-pitch-alignment": "map" } });
   map.addLayer({ id: "trail-line", type: "line", source: "trail",
-    paint: { "line-color": "#ffd400", "line-width": 6 } });
+    paint: { "line-color": "#ffd400", "line-width": w(5, 8, 13) } });
   render();
 });
 
@@ -170,7 +184,7 @@ function refresh() {
 function fit(rs) {
   const b = new maplibregl.LngLatBounds();
   rs.forEach(r => r.lines.forEach(l => l.forEach(p => b.extend(ll(p)))));
-  map.fitBounds(b, { padding: 60, maxZoom: 11, pitch: $("tilt").checked ? 55 : 0, bearing: 0, duration: 1200 });
+  map.fitBounds(b, { padding: 60, maxZoom: 11, pitch: $("tilt").checked ? 60 : 0, bearing: 0, duration: 1500 });
 }
 
 // ---- list ----
@@ -222,6 +236,24 @@ const dist = (a, b) => {                       // metres, equirectangular is ple
   const k = Math.PI / 180, x = (b[1] - a[1]) * k * Math.cos((a[0] + b[0]) * k / 2), y = (b[0] - a[0]) * k;
   return Math.hypot(x, y) * 6371000;
 };
+let heading = 0;
+const bearingTo = (a, b) => {
+  const k = Math.PI / 180, dl = (b[1] - a[1]) * k, y = Math.sin(dl) * Math.cos(b[0] * k),
+        x = Math.cos(a[0] * k) * Math.sin(b[0] * k) - Math.sin(a[0] * k) * Math.cos(b[0] * k) * Math.cos(dl);
+  return (Math.atan2(y, x) / k + 360) % 360;
+};
+const lerpAngle = (a, b, t) => a + (((b - a + 540) % 360) - 180) * t;
+// a point ~40 km further along the path, so the camera looks where the runner is going
+function headingPoint(legs, p) {
+  let best = null, bd = Infinity;
+  for (const pts of legs) for (let k = 0; k < pts.length; k++) {
+    const d = dist(p, pts[k]); if (d < bd) { bd = d; best = [pts, k]; }
+  }
+  if (!best) return null;
+  const [pts, k] = best;
+  for (let j = k + 1; j < pts.length; j++) if (dist(p, pts[j]) > 40000) return pts[j];
+  return pts.length - 1 > k ? pts[pts.length - 1] : null;
+}
 function startPlay() {
   const legs = current.lines;
   const lens = legs.map(pts => pts.slice(1).reduce((a, p, k) => a + dist(pts[k], p), 0));
@@ -232,7 +264,7 @@ function startPlay() {
   const t0 = performance.now();
   anim = { runner };
   playBtn.textContent = "■ 停止";
-  if ($("follow").checked) map.easeTo({ center: ll(legs[0][0]), zoom: Math.max(map.getZoom(), 8), pitch: 60, duration: 800 });
+  if ($("follow").checked) { heading = map.getBearing(); map.easeTo({ center: ll(legs[0][0]), zoom: Math.max(map.getZoom(), 9), pitch: 62, duration: 800 }); }
   const step = now => {
     let d = Math.min(1, (now - t0) / duration) * total;
     const done = []; let p = legs[0][0];
@@ -253,7 +285,11 @@ function startPlay() {
     }
     map.getSource("trail").setData({ type: "Feature", properties: {}, geometry: { type: "MultiLineString", coordinates: done } });
     runner.setLngLat(ll(p));
-    if ($("follow").checked) map.jumpTo({ center: ll(p) });
+    if ($("follow").checked) {
+      const ahead = headingPoint(legs, p);
+      if (ahead) heading = lerpAngle(heading, bearingTo(p, ahead), 0.04);
+      map.jumpTo({ center: ll(p), bearing: heading });
+    }
     if (now - t0 < duration) anim.raf = requestAnimationFrame(step);
     else playBtn.textContent = "▶ 重播";
   };
@@ -274,13 +310,15 @@ $("all").onchange = e => {
     $("all").checked = true; refresh(); fit(ROUTES);
   }
 };
+$("labels").onchange = e => map.setLayoutProperty("lab", "visibility", e.target.checked ? "visible" : "none");
 $("arrows").onchange = $("nums").onchange = refresh;
 $("base").onchange = e => {
   map.setLayoutProperty("osm", "visibility", e.target.value === "osm" ? "visible" : "none");
+  map.setPaintProperty("hill", "hillshade-exaggeration", e.target.value === "osm" ? 0.45 : 0.35);
   map.setLayoutProperty("sat", "visibility", e.target.value === "sat" ? "visible" : "none");
 };
 $("exag").oninput = e => map.setTerrain({ source: "dem", exaggeration: +e.target.value });
-$("tilt").onchange = e => map.easeTo({ pitch: e.target.checked ? 55 : 0, duration: 600 });
+$("tilt").onchange = e => map.easeTo({ pitch: e.target.checked ? 60 : 0, duration: 600 });
 </script>
 </body>
 </html>
