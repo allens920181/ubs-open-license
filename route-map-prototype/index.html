@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>聖經路線地圖</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<style>
+  :root { --bg:#fff; --fg:#222; --muted:#666; --line:#ddd; --accent:#b4432a; --hover:#f6efe9; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#1e1e1e; --fg:#eee; --muted:#aaa; --line:#3a3a3a; --accent:#ff8a6b; --hover:#2c2623; }
+  }
+  * { box-sizing: border-box; }
+  html, body { height:100%; margin:0; background:var(--bg); color:var(--fg);
+    font:14px/1.4 system-ui, "Noto Sans TC", sans-serif; }
+  #app { display:flex; height:100%; }
+  #side { width:320px; max-width:45%; display:flex; flex-direction:column; border-right:1px solid var(--line); }
+  #head { padding:12px; border-bottom:1px solid var(--line); }
+  #head h1 { font-size:16px; margin:0 0 8px; }
+  #q { width:100%; padding:6px 8px; border:1px solid var(--line); border-radius:4px; background:var(--bg); color:var(--fg); }
+  #tools { margin-top:8px; display:flex; gap:12px; align-items:center; color:var(--muted); }
+  #tools button { border:1px solid var(--line); background:var(--bg); color:var(--fg); border-radius:4px; padding:3px 8px; cursor:pointer; }
+  #list { flex:1; overflow:auto; }
+  .grp { position:sticky; top:0; background:var(--bg); padding:6px 12px; font-weight:600;
+    border-bottom:1px solid var(--line); color:var(--accent); }
+  .item { padding:6px 12px; cursor:pointer; border-bottom:1px solid var(--line); display:flex; gap:8px; }
+  .item:hover { background:var(--hover); }
+  .item.on { background:var(--hover); box-shadow:inset 3px 0 var(--accent); }
+  .item .n { color:var(--muted); min-width:2.5em; font-variant-numeric:tabular-nums; }
+  #foot { padding:8px 12px; font-size:12px; color:var(--muted); border-top:1px solid var(--line); }
+  #foot a { color:inherit; }
+  #map { flex:1; }
+  @media (max-width:640px) {
+    #app { flex-direction:column-reverse; }
+    #side { width:100%; max-width:none; height:45%; border-right:0; border-top:1px solid var(--line); }
+  }
+</style>
+</head>
+<body>
+<div id="app">
+  <aside id="side">
+    <div id="head">
+      <h1>聖經路線地圖</h1>
+      <input id="q" type="search" placeholder="搜尋路線(英文名稱或編號)">
+      <div id="tools">
+        <label><input id="all" type="checkbox"> 顯示全部</label>
+        <button id="clear">清除</button>
+        <span id="count"></span>
+      </div>
+    </div>
+    <div id="list"></div>
+    <div id="foot">
+      路線資料 © United Bible Societies 2023,路線製作:Leen Ritmeyer。
+      <a href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>
+    </div>
+  </aside>
+  <div id="map"></div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="routes.js"></script>
+<script>
+const map = L.map("map").setView([32, 36], 6);
+L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+  maxZoom: 18,
+  attribution: "© OpenStreetMap contributors"
+}).addTo(map);
+
+const palette = ["#b4432a", "#2a6fb4", "#2a8f5a", "#8a4fb4", "#c48a1a", "#1a8f9c", "#b42a6f"];
+const groups = [...new Set(ROUTES.map(r => r.group))];
+const colorOf = r => palette[groups.indexOf(r.group) % palette.length];
+
+const layers = new Map();   // route id -> L.layerGroup
+const selected = new Set();
+
+function layerFor(r) {
+  if (!layers.has(r.id)) {
+    const g = L.layerGroup();
+    const color = colorOf(r);
+    r.lines.forEach(pts => {
+      L.polyline(pts, { color, weight: 4, opacity: 0.85 }).bindTooltip(`${r.num}. ${r.name}`, { sticky: true }).addTo(g);
+    });
+    const first = r.lines[0][0], lastLine = r.lines[r.lines.length - 1];
+    const last = lastLine[lastLine.length - 1];
+    L.circleMarker(first, { radius: 6, color: "#fff", weight: 2, fillColor: "#2a8f5a", fillOpacity: 1 })
+      .bindTooltip("起點").addTo(g);
+    L.circleMarker(last, { radius: 6, color: "#fff", weight: 2, fillColor: "#c0392b", fillOpacity: 1 })
+      .bindTooltip("終點").addTo(g);
+    layers.set(r.id, g);
+  }
+  return layers.get(r.id);
+}
+
+function boundsOf(rs) {
+  return L.latLngBounds(rs.flatMap(r => r.lines.flat()));
+}
+
+const listEl = document.getElementById("list");
+const rows = new Map();
+
+function render(filter = "") {
+  const f = filter.trim().toLowerCase();
+  listEl.innerHTML = "";
+  rows.clear();
+  let n = 0;
+  groups.forEach(g => {
+    const rs = ROUTES.filter(r => r.group === g && (!f || `${r.num} ${r.name}`.toLowerCase().includes(f)));
+    if (!rs.length) return;
+    const h = document.createElement("div");
+    h.className = "grp";
+    h.textContent = g;
+    listEl.appendChild(h);
+    rs.forEach(r => {
+      const el = document.createElement("div");
+      el.className = "item" + (selected.has(r.id) ? " on" : "");
+      el.innerHTML = `<span class="n">${r.num}</span><span></span>`;
+      el.lastChild.textContent = r.name;
+      el.onclick = () => toggle(r, true);
+      listEl.appendChild(el);
+      rows.set(r.id, el);
+      n++;
+    });
+  });
+  document.getElementById("count").textContent = `${n} 條`;
+}
+
+function toggle(r, fit) {
+  const g = layerFor(r);
+  if (selected.has(r.id)) {
+    selected.delete(r.id);
+    map.removeLayer(g);
+  } else {
+    selected.add(r.id);
+    g.addTo(map);
+    if (fit) map.fitBounds(boundsOf([r]), { padding: [40, 40] });
+  }
+  rows.get(r.id)?.classList.toggle("on", selected.has(r.id));
+}
+
+function clearAll() {
+  selected.forEach(id => map.removeLayer(layers.get(id)));
+  selected.clear();
+  rows.forEach(el => el.classList.remove("on"));
+  document.getElementById("all").checked = false;
+}
+
+document.getElementById("q").addEventListener("input", e => render(e.target.value));
+document.getElementById("clear").onclick = clearAll;
+document.getElementById("all").onchange = e => {
+  clearAll();
+  if (e.target.checked) {
+    ROUTES.forEach(r => { selected.add(r.id); layerFor(r).addTo(map); });
+    rows.forEach(el => el.classList.add("on"));
+    map.fitBounds(boundsOf(ROUTES), { padding: [20, 20] });
+    document.getElementById("all").checked = true;
+  }
+};
+
+render();
+</script>
+</body>
+</html>
