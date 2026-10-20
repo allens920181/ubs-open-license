@@ -391,6 +391,35 @@ def build_places():
           f"{sum(1 for p in out if p['zh'])} have a Chinese name")
 
 
+# ---------- people (names and verses from data-src/people.txt, paintings from people_images.json) ----------
+def build_people():
+    art = {}
+    path = os.path.join(SRC, "people_images.json")
+    if os.path.exists(path):
+        with open(path, encoding="utf-8") as fh:
+            art = json.load(fh)
+    pub = os.path.join(APP, "public", "people")
+
+    def mine(folder, pid):
+        d = os.path.join(pub, folder)
+        names = sorted(f for f in os.listdir(d) if re.match(rf"^{re.escape(pid)}([-_.]|$)", f) and not f.startswith(".")) if os.path.isdir(d) else []
+        return [f"people/{folder}/{f}" for f in names]
+
+    out = []
+    with open(os.path.join(SRC, "people.txt"), encoding="utf-8") as fh:
+        for line in fh:
+            if "|" not in line or line.startswith("#"):
+                continue
+            pid, zh, en, era, refs = line.rstrip("\n").split("|")
+            out.append({"id": pid, "zh": zh, "en": en, "era": era, "refs": parse_refs(refs),
+                        "art": [{k: v for k, v in im.items() if k not in ("w", "h")} | {"r": round(im["w"] / im["h"], 2)}
+                                for im in art.get(pid, {}).get("images", [])],
+                        "chibi": mine("chibi", pid), "own": mine("own", pid)})
+    write("people.json", out)
+    print(f"    {sum(1 for p in out if p['art'])} of {len(out)} people have paintings, "
+          f"{sum(1 for p in out if p['chibi'])} have a chibi picture, {sum(1 for p in out if p['own'])} have your own pictures")
+
+
 if __name__ == "__main__":
     print("building data ->", OUT)
     build_routes()
@@ -399,3 +428,4 @@ if __name__ == "__main__":
     build_parallels()
     build_hottp()
     build_places()
+    build_people()

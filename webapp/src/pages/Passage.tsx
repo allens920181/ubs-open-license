@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { anySpan, anyVerse, bookByNumber, formatSpan, overlaps, parseRef, spanToParam } from "../lib/refs";
-import { useHottp, useImages, useNature, useParallels, usePlaces, useRoutes } from "../lib/data";
+import { useHottp, useImages, useNature, useParallels, usePeople, usePlaces, useRoutes } from "../lib/data";
+import { personThumb } from "../lib/people";
 import type { NatureEntry, NatureKind } from "../lib/types";
 import ImageGrid from "../components/ImageGrid";
 import NatureDetail, { KIND_LABEL } from "../components/NatureDetail";
@@ -11,9 +12,9 @@ import { RefLinks, passagePath } from "../components/RefLinks";
 import { imageUrl } from "../lib/images";
 import { remember } from "./Home";
 
-const TABS = ["map", "images", "nature", "parallel", "hottp"] as const;
+const TABS = ["map", "images", "nature", "people", "parallel", "hottp"] as const;
 type Tab = (typeof TABS)[number];
-const TAB_LABEL: Record<Tab, string> = { map: "地圖與地名", images: "圖片", nature: "動植物與器物", parallel: "平行經文", hottp: "經文校勘" };
+const TAB_LABEL: Record<Tab, string> = { map: "地圖與地名", images: "圖片", nature: "動植物與器物", people: "人物", parallel: "平行經文", hottp: "經文校勘" };
 const RATING: Record<string, string> = { A: "A 幾乎確定", B: "B 有些疑問", C: "C 相當疑問", D: "D 非常疑問" };
 const KINDS: NatureKind[] = ["flora", "fauna", "realia"];
 
@@ -27,6 +28,7 @@ export default function Passage() {
 
   const routes = useRoutes();
   const places = usePlaces();
+  const people = usePeople();
   const images = useImages();
   const flora = useNature("flora");
   const fauna = useNature("fauna");
@@ -38,6 +40,7 @@ export default function Passage() {
 
   const gs = useMemo(() => [...new Set((routes.data ?? []).map((r) => r.group))], [routes.data]);
   const mRoutes = useMemo(() => span && routes.data ? routes.data.filter((r) => anySpan(r.refs, span)) : [], [span, routes.data]);
+  const mPeople = useMemo(() => span && people.data ? people.data.filter((p) => anySpan(p.refs, span)) : [], [span, people.data]);
   const mPlaces = useMemo(() => span && places.data ? places.data.filter((p) => anyVerse(p.refs, span)) : [], [span, places.data]);
   const mImages = useMemo(() => span && images.data ? images.data.filter((i) => anyVerse(i.refs, span)) : [], [span, images.data]);
   const nature = useMemo(() => {
@@ -50,8 +53,8 @@ export default function Passage() {
   const mParallels = useMemo(() => span && parallels.data ? parallels.data.filter((g) => g.some((s) => overlaps(s, span))) : [], [span, parallels.data]);
   const mHottp = useMemo(() => span && hottp.data ? hottp.data.filter((h) => anyVerse(h.refs, span)) : [], [span, hottp.data]);
 
-  const counts: Record<Tab, number> = { map: mRoutes.length + mPlaces.length, images: mImages.length, nature: nature.length, parallel: mParallels.length, hottp: mHottp.length };
-  const loading: Record<Tab, boolean> = { map: routes.loading || places.loading, images: images.loading, nature: flora.loading || fauna.loading || realia.loading, parallel: parallels.loading, hottp: hottp.loading };
+  const counts: Record<Tab, number> = { map: mRoutes.length + mPlaces.length, images: mImages.length, nature: nature.length, people: mPeople.length, parallel: mParallels.length, hottp: mHottp.length };
+  const loading: Record<Tab, boolean> = { map: routes.loading || places.loading, images: images.loading, nature: flora.loading || fauna.loading || realia.loading, people: people.loading, parallel: parallels.loading, hottp: hottp.loading };
   const wanted = params.get("tab") as Tab | null;
   const loadedAll = !Object.values(loading).some(Boolean);
   const tab: Tab = wanted && TABS.includes(wanted) ? wanted : (loadedAll ? TABS.find((t) => counts[t] > 0) ?? "map" : "map");
@@ -102,6 +105,20 @@ export default function Passage() {
       {tab === "images" && (mImages.length ? <ImageGrid images={mImages} /> : <Empty loading={images.loading} text="這段經文沒有對應的圖片。" extra={<Link to="/images">瀏覽圖片庫</Link>} />)}
 
       {tab === "nature" && (nature.length ? <NatureList items={nature} /> : <Empty loading={flora.loading} text="這段經文沒有對應的動植物或器物條目。" />)}
+
+      {tab === "people" && (mPeople.length ? (
+        <div className="grid people-grid">
+          {mPeople.map((p) => {
+            const t = personThumb(p);
+            return (
+              <Link key={p.id} to={`/people/${p.id}`} className="card img-card" style={{ textDecoration: "none", color: "inherit" }}>
+                {t ? <img loading="lazy" src={t} alt={p.zh} /> : <div className="ph-art">{p.zh[0]}</div>}
+                <div className="img-title"><b>{p.zh}</b><div className="muted small">{p.en}</div></div>
+              </Link>
+            );
+          })}
+        </div>
+      ) : <Empty loading={people.loading} text="這段經文沒有對應的人物。" extra={<Link to="/people">瀏覽人物</Link>} />)}
 
       {tab === "parallel" && (mParallels.length ? (
         <div className="parallels">

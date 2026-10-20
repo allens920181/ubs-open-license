@@ -187,3 +187,9 @@ textarea.input { width: 100%; resize: vertical; }
 .maplibregl-popup-content { padding: 10px 14px; border-radius: 10px; }
 .tabs.mini { margin: 0; padding: 0 8px; }
 .tabs.mini .tab { padding: 6px 10px; }
+
+/* people */
+.people-grid { grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); }
+.people-grid .img-card img { aspect-ratio: 3 / 4; object-position: top; }
+.ph-art { aspect-ratio: 3 / 4; display: grid; place-items: center; font-size: 3rem; background: var(--accent-soft); color: var(--accent); }
+code { background: var(--accent-soft); padding: 0 5px; border-radius: 4px; }

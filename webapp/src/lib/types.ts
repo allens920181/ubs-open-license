@@ -77,3 +77,30 @@ export interface Place {
   /** Added from the Hebrew dictionary only (not in OpenBible). */
   x?: 1;
 }
+
+export interface Artwork {
+  file: string;
+  title: string;
+  artist: string;
+  date: string;
+  desc: string;
+  license: string;
+  /** width / height */
+  r: number;
+  /** Commons file page. */
+  page: string;
+}
+
+export interface Person {
+  id: string;
+  zh: string;
+  en: string;
+  era: string;
+  refs: Span[];
+  /** Public-domain paintings and sculptures on Wikimedia Commons. */
+  art: Artwork[];
+  /** Chibi (Q版) pictures you put in public/people/chibi. */
+  chibi: string[];
+  /** Your own pictures in public/people/own. */
+  own: string[];
+}

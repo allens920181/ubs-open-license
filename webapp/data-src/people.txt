@@ -1,0 +1,86 @@
+# 人物:「id|中文名|英文名|時代|代表經文;...」。經文格式同 scripture_refs.txt(USFM 書卷三碼)。
+# 中文名用和合本譯名;經文是各人物故事的主要段落,尚未逐條校對。
+adam|亞當|Adam|創世與族長|GEN 2:7-3:24; GEN 4:1; GEN 5:1-5
+eve|夏娃|Eve|創世與族長|GEN 2:18-3:24; GEN 4:1
+cain|該隱|Cain|創世與族長|GEN 4:1-16
+abel|亞伯|Abel|創世與族長|GEN 4:1-10
+noah|挪亞|Noah|創世與族長|GEN 6:9-9:29
+melchizedek|麥基洗德|Melchizedek|創世與族長|GEN 14:18-20
+abraham|亞伯拉罕|Abraham|創世與族長|GEN 12:1-25:11
+lot|羅得|Lot|創世與族長|GEN 13:1-13; GEN 19:1-38
+sarah|撒拉|Sarah|創世與族長|GEN 11:29-31; GEN 18:1-15; GEN 21:1-7; GEN 23:1-2
+hagar|夏甲|Hagar|創世與族長|GEN 16:1-16; GEN 21:8-21
+isaac|以撒|Isaac|創世與族長|GEN 21:1-8; GEN 22:1-19; GEN 24:62-67; GEN 26:1-35
+rebekah|利百加|Rebekah|創世與族長|GEN 24:1-67; GEN 27:1-46
+jacob|雅各|Jacob|創世與族長|GEN 25:19-34; GEN 27:1-28:22; GEN 32:22-32; GEN 46:1-47:31
+esau|以掃|Esau|創世與族長|GEN 25:19-34; GEN 27:1-45; GEN 33:1-17
+rachel|拉結|Rachel|創世與族長|GEN 29:1-30:24; GEN 35:16-20
+leah|利亞|Leah|創世與族長|GEN 29:16-35; GEN 30:9-21
+joseph_ot|約瑟(雅各的兒子)|Joseph (son of Jacob)|創世與族長|GEN 37:1-36; GEN 39:1-45:28; GEN 50:15-26
+judah|猶大(雅各的兒子)|Judah (son of Jacob)|創世與族長|GEN 37:26-27; GEN 38:1-30; GEN 44:14-34
+moses|摩西|Moses|出埃及與曠野|EXO 2:1-4:31; EXO 12:1-15:21; EXO 19:1-20:21; DEU 34:1-12
+aaron|亞倫|Aaron|出埃及與曠野|EXO 4:14-16; EXO 28:1-3; NUM 17:1-13
+miriam|米利暗|Miriam|出埃及與曠野|EXO 15:20-21; NUM 12:1-15
+joshua|約書亞|Joshua|征服與士師|JOS 1:1-24:33
+rahab|喇合|Rahab|征服與士師|JOS 2:1-24; JOS 6:22-25
+deborah|底波拉|Deborah|征服與士師|JDG 4:1-5:31
+gideon|基甸|Gideon|征服與士師|JDG 6:11-8:35
+samson|參孫|Samson|征服與士師|JDG 13:1-16:31
+delilah|大利拉|Delilah|征服與士師|JDG 16:4-21
+ruth|路得|Ruth|征服與士師|RUT 1:1-4:22
+naomi|拿俄米|Naomi|征服與士師|RUT 1:1-4:17
+hannah|哈拿|Hannah|王國時代|1SA 1:1-2:11
+eli|以利|Eli|王國時代|1SA 1:9-18; 1SA 4:12-18
+samuel|撒母耳|Samuel|王國時代|1SA 1:20-28; 1SA 3:1-21; 1SA 9:1-10:27; 1SA 16:1-13
+saul|掃羅(王)|Saul|王國時代|1SA 9:1-10:27; 1SA 15:1-35; 1SA 31:1-13
+david|大衛|David|王國時代|1SA 16:1-13; 1SA 17:1-58; 2SA 5:1-10; 2SA 11:1-12:25
+goliath|歌利亞|Goliath|王國時代|1SA 17:1-58
+jonathan|約拿單(掃羅的兒子)|Jonathan (son of Saul)|王國時代|1SA 14:1-46; 1SA 18:1-4; 1SA 20:1-42
+bathsheba|拔示巴|Bathsheba|王國時代|2SA 11:1-12:25; 1KI 1:11-31
+absalom|押沙龍|Absalom|王國時代|2SA 13:1-18:33
+solomon|所羅門|Solomon|王國時代|1KI 3:1-28; 1KI 6:1-38; 1KI 10:1-13
+sheba|示巴女王|Queen of Sheba|王國時代|1KI 10:1-13
+elijah|以利亞|Elijah|分裂王國與先知|1KI 17:1-24; 1KI 18:1-46; 1KI 19:1-21; 2KI 2:1-18
+elisha|以利沙|Elisha|分裂王國與先知|1KI 19:19-21; 2KI 2:1-25; 2KI 4:1-6:7
+jezebel|耶洗別|Jezebel|分裂王國與先知|1KI 16:31; 1KI 21:1-29; 2KI 9:30-37
+ahab|亞哈|Ahab|分裂王國與先知|1KI 16:29-34; 1KI 18:16-19; 1KI 21:1-29
+hezekiah|希西家|Hezekiah|分裂王國與先知|2KI 18:1-20:21
+isaiah|以賽亞|Isaiah|分裂王國與先知|2KI 19:1-7; ISA 6:1-13
+jeremiah|耶利米|Jeremiah|被擄與歸回|JER 1:1-19; JER 36:1-32; JER 38:1-13
+ezekiel|以西結|Ezekiel|被擄與歸回|EZK 1:1-3:27; EZK 37:1-14
+daniel|但以理|Daniel|被擄與歸回|DAN 1:1-21; DAN 3:1-30; DAN 6:1-28
+nebuchadnezzar|尼布甲尼撒|Nebuchadnezzar|被擄與歸回|2KI 24:1-25:21; DAN 2:1-4:37
+esther|以斯帖|Esther|被擄與歸回|EST 1:1-10:3
+job|約伯|Job|智慧文學|JOB 1:1-42:17
+jonah|約拿|Jonah|分裂王國與先知|JON 1:1-4:11
+ezra|以斯拉|Ezra|被擄與歸回|EZR 7:1-10:44; NEH 8:1-18
+nehemiah|尼希米|Nehemiah|被擄與歸回|NEH 1:1-2:20; NEH 4:1-23; NEH 8:1-18
+mary|馬利亞(耶穌的母親)|Mary, mother of Jesus|耶穌與福音書|MAT 1:18-25; LUK 1:26-56; LUK 2:1-52; JHN 19:25-27
+joseph_nt|約瑟(馬利亞的丈夫)|Joseph, husband of Mary|耶穌與福音書|MAT 1:18-25; MAT 2:13-23; LUK 2:1-52
+john_baptist|施洗約翰|John the Baptist|耶穌與福音書|MAT 3:1-17; LUK 1:5-80; JHN 1:19-34
+jesus|耶穌|Jesus|耶穌與福音書|MAT 1:18-2:23; MAT 5:1-7:29; LUK 15:1-32; JHN 19:17-20:31
+peter|彼得|Peter|耶穌與福音書|MAT 16:13-20; JHN 21:15-19; ACT 2:14-41; ACT 10:1-48
+andrew|安得烈|Andrew|耶穌與福音書|MRK 1:16-18; JHN 1:35-42; JHN 6:8-9
+james_zebedee|雅各(西庇太的兒子)|James, son of Zebedee|耶穌與福音書|MRK 1:19-20; MRK 5:37; ACT 12:1-2
+john_apostle|約翰(使徒)|John the Apostle|耶穌與福音書|MRK 1:19-20; JHN 13:23-25; JHN 19:26-27
+matthew|馬太|Matthew|耶穌與福音書|MAT 9:9-13; MAT 10:3
+thomas|多馬|Thomas|耶穌與福音書|JHN 11:16; JHN 14:5; JHN 20:24-29
+judas|加略人猶大|Judas Iscariot|耶穌與福音書|MAT 26:14-16; MAT 26:47-50; MAT 27:3-10
+mary_magdalene|抹大拉的馬利亞|Mary Magdalene|耶穌與福音書|LUK 8:2; JHN 20:1-18
+martha|馬大|Martha|耶穌與福音書|LUK 10:38-42; JHN 11:1-44
+lazarus|拉撒路|Lazarus|耶穌與福音書|JHN 11:1-44; JHN 12:1-11
+zacchaeus|撒該|Zacchaeus|耶穌與福音書|LUK 19:1-10
+nicodemus|尼哥底母|Nicodemus|耶穌與福音書|JHN 3:1-21; JHN 19:38-42
+pilate|彼拉多|Pontius Pilate|耶穌與福音書|MAT 27:11-26; JHN 18:28-19:16
+herod|希律大王|Herod the Great|耶穌與福音書|MAT 2:1-23
+stephen|司提反|Stephen|使徒時代|ACT 6:8-7:60
+philip|腓利(傳福音的)|Philip the Evangelist|使徒時代|ACT 8:4-40
+cornelius|哥尼流|Cornelius|使徒時代|ACT 10:1-48
+paul|保羅|Paul|使徒時代|ACT 9:1-19; ACT 13:1-14:28; ACT 27:1-28:31
+barnabas|巴拿巴|Barnabas|使徒時代|ACT 4:36-37; ACT 11:19-30; ACT 13:1-15:41
+timothy|提摩太|Timothy|使徒時代|ACT 16:1-5; 1TI 1:1-20; 2TI 1:1-18
+luke|路加|Luke|使徒時代|LUK 1:1-4; COL 4:14; 2TI 4:11
+mark|馬可(約翰馬可)|John Mark|使徒時代|ACT 12:12; ACT 13:13; 2TI 4:11
+lydia|呂底亞|Lydia|使徒時代|ACT 16:11-15; ACT 16:40
+apollos|亞波羅|Apollos|使徒時代|ACT 18:24-28; 1CO 3:4-9
+priscilla|百基拉與亞居拉|Priscilla and Aquila|使徒時代|ACT 18:1-3; ACT 18:18-28; ROM 16:3-5

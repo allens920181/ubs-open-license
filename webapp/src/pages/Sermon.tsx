@@ -1,13 +1,14 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { useImages, useNature, usePlaces, useRoutes } from "../lib/data";
+import { useImages, useNature, usePeople, usePlaces, useRoutes } from "../lib/data";
+import { artUrl, localUrl, personThumb } from "../lib/people";
 import { imageTitle, imageUrl } from "../lib/images";
 import { parseRef } from "../lib/refs";
 import {
   currentSermon, deleteSermon, exportJson, importJson, moveItem, newSermon, removeItem, renameSermon, selectSermon,
   setNote, useSermons, type SermonItem,
 } from "../lib/store";
-import type { NatureKind } from "../lib/types";
+import type { NatureKind, Person } from "../lib/types";
 import NatureDetail from "../components/NatureDetail";
 import RouteMap from "../components/LazyRouteMap";
 import { passagePath } from "../components/RefLinks";
@@ -20,6 +21,8 @@ export default function Sermon() {
   const [msg, setMsg] = useState("");
   const file = useRef<HTMLInputElement>(null);
   const byId = useMemo(() => new Map((images.data ?? []).map((i) => [i.id, i])), [images.data]);
+  const people = usePeople();
+  const personById = useMemo(() => new Map((people.data ?? []).map((p) => [p.id, p])), [people.data]);
 
   const download = () => {
     const a = document.createElement("a");
@@ -58,7 +61,7 @@ export default function Sermon() {
         {sermon.items.map((it, i) => (
           <li key={it.uid} className="card">
             <div className="item-head">
-              <Thumb item={it} image={it.type === "image" ? byId.get(it.ref) : undefined} />
+              <Thumb item={it} image={it.type === "image" ? byId.get(it.ref) : undefined} thumb={itemThumb(it, personById)} />
               <div className="grow">
                 <div><span className="badge">{TYPE_LABEL[it.type]}</span> <b>{it.title}</b></div>
                 <ItemLink item={it} />
@@ -79,15 +82,29 @@ export default function Sermon() {
   );
 }
 
-const TYPE_LABEL = { image: "圖片", route: "路線", nature: "動植物器物", passage: "經文", place: "地名" } as const;
+const TYPE_LABEL = { image: "圖片", route: "路線", nature: "動植物器物", passage: "經文", place: "地名", person: "人物", artwork: "人物圖" } as const;
 
-function Thumb({ item, image }: { item: SermonItem; image?: { col: string; file: string } }) {
+/** Picture for a person or artwork item, resolved from people.json. */
+function itemThumb(it: SermonItem, people: Map<string, Person>): string | null {
+  if (it.type === "person") { const p = people.get(it.ref); return p ? personThumb(p) : null; }
+  if (it.type === "artwork") {
+    const [pid, file] = it.ref.split("|");
+    const a = people.get(pid)?.art.find((x) => x.file === file);
+    return a ? artUrl(a, 200) : null;
+  }
+  return null;
+}
+
+function Thumb({ item, image, thumb }: { item: SermonItem; image?: { col: string; file: string }; thumb?: string | null }) {
   if (item.type === "image" && image) return <img className="thumb" src={imageUrl(image, 200)} alt="" />;
+  if (thumb) return <img className="thumb" src={thumb} alt="" />;
   return <div className="thumb ph">{TYPE_LABEL[item.type][0]}</div>;
 }
 
 function ItemLink({ item }: { item: SermonItem }) {
   if (item.type === "route") return <Link className="small" to={`/map?r=${encodeURIComponent(item.ref)}`}>在地圖中開啟</Link>;
+  if (item.type === "person") return <Link className="small" to={`/people/${item.ref}`}>開啟人物</Link>;
+  if (item.type === "artwork") return <Link className="small" to={`/people/${item.ref.split("|")[0]}`}>開啟人物</Link>;
   if (item.type === "place") return <Link className="small" to={`/map?p=${encodeURIComponent(item.ref)}`}>在地圖中開啟</Link>;
   if (item.type === "nature") { const [k, key] = item.ref.split(":"); return <Link className="small" to={`/nature/${k}/${encodeURIComponent(key)}`}>開啟條目</Link>; }
   if (item.type === "passage") { const s = parseRef(item.ref); return s ? <Link className="small" to={passagePath(s)}>開啟經文</Link> : null; }
@@ -101,6 +118,7 @@ function Present({ items, start, onClose }: { items: SermonItem[]; start: number
   const images = useImages();
   const routes = useRoutes();
   const places = usePlaces();
+  const people = usePeople();
   const kind = it?.type === "nature" ? (it.ref.split(":")[0] as NatureKind) : null;
   const nature = useNature(kind);
   useEffect(() => {
@@ -119,6 +137,10 @@ function Present({ items, start, onClose }: { items: SermonItem[]; start: number
   const groups = useMemo(() => [...new Set((routes.data ?? []).map((r) => r.group))], [routes.data]);
   const entry = it && kind ? nature.data?.find((e) => e.k === it.ref.split(":")[1]) : undefined;
   const picked = useMemo(() => (route ? [route] : []), [route]);
+  const person = it && (it.type === "person" || it.type === "artwork") ? people.data?.find((x) => x.id === it.ref.split("|")[0]) : undefined;
+  const artFile = it?.type === "artwork" ? it.ref.split("|")[1] : undefined;
+  const art = person ? (artFile ? person.art.find((a) => a.file === artFile) : person.art[0]) : undefined;
+  const personSrc = person ? (art ? artUrl(art, 1600) : person.chibi[0] ? localUrl(person.chibi[0]) : person.own[0] ? localUrl(person.own[0]) : null) : null;
   const place = it?.type === "place" ? places.data?.find((x) => x.id === it.ref) : undefined;
   const placeList = useMemo(() => (place ? [place] : []), [place]);
   if (!it) return null;
@@ -135,12 +157,14 @@ function Present({ items, start, onClose }: { items: SermonItem[]; start: number
       <div className="present-body">
         {image && <img key={image.id} src={imageUrl(image, 1600)} alt={imageTitle(image)} />}
         {route && <RouteMap routes={picked} groups={groups} focusId={route.id} places={places.data} nearby={places.data} />}
+        {person && personSrc && <img key={personSrc} src={personSrc} alt={person.zh} />}
         {place && <RouteMap routes={[]} groups={groups} places={placeList} focusPlaceId={place.id} />}
         {entry && kind && <div className="present-scroll"><NatureDetail kind={kind} entry={entry} images={images.data} /></div>}
         {it.type === "passage" && <div className="present-text">{it.title}</div>}
-        {!image && !route && !place && !entry && it.type !== "passage" && <p className="muted">載入中…</p>}
+        {!image && !route && !place && !entry && !personSrc && it.type !== "passage" && <p className="muted">{it.type === "person" || it.type === "artwork" ? (people.data ? "這個人物還沒有圖片。" : "載入中…") : "載入中…"}</p>}
       </div>
       {it.note && <div className="present-note">{it.note}</div>}
+      {art && <div className="present-credit">{person?.zh}:{art.title} · {[art.artist, art.date, art.license].filter(Boolean).join(" · ")}</div>}
       {image && <div className="present-credit">{imageTitle(image)} · {image.cp}</div>}
     </div>
   );

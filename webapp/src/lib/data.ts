@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import type { BibleImage, HottpEntry, NatureEntry, NatureKind, Place, Route, Span } from "./types";
+import type { BibleImage, HottpEntry, NatureEntry, NatureKind, Person, Place, Route, Span } from "./types";
 
 const cache = new Map<string, Promise<unknown>>();
 
@@ -36,6 +36,7 @@ export function useData<T>(name: string | null): Loaded<T> {
 }
 
 export const useRoutes = () => useData<Route[]>("routes.json");
+export const usePeople = () => useData<Person[]>("people.json");
 export const usePlaces = () => useData<Place[]>("places.json");
 export const useImages = () => useData<BibleImage[]>("images.json");
 export const useNature = (kind: NatureKind | null) => useData<NatureEntry[]>(kind ? `${kind}.json` : null);
