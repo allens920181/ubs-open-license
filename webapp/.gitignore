@@ -3,3 +3,4 @@ dist
 public/data
 *.tsbuildinfo
 public/stories
+scripts/.cache
